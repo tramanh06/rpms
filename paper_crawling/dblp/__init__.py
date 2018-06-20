@@ -56,6 +56,10 @@ class Author(LazyAPIData):
         }
 
         self.data = data
+    
+    def __str__(self):
+        return self.name
+
 
 def first_or_none(seq):
     try:
@@ -139,6 +143,7 @@ class Publication(LazyAPIData):
         }
 
         self.data = data
+
 
 def search(author_str):
     resp = requests.get(DBLP_AUTHOR_SEARCH_URL, params={'xauthor':author_str})
