@@ -5,8 +5,9 @@ import os
 import re
 import sys
 
-from sanitize import sanitize, tokenize, isUIWord
+from sanitize import sanitize
 from ispdf import ispdf
+import bow
 
 sys.path += ['.']
 
@@ -31,50 +32,19 @@ pdf2textCMD = "pdftotext"
 #     - file containing URLs (say one per line)
 
 
-def makeBow(fileIn, fileOut, bow=None, verbose=False):
-
-    if bow is None:
-        bow = {}
-
-    with open(fileIn, 'rb') as f:
-        if not f:
-            print 'problem opening file'
-            return None
-
-        # token-ize lines
-        lines = f.readlines()
-
-    # Remove equations and other things like that
-    for line in lines:
-
-        # replace accents
-        words = tokenize(line)
-
-        for word in words:
-            word = word.lower()
-            if len(word) > 0:
-                if not isUIWord(word):  # only keep informative words
-                    if word not in bow:
-                        bow[word] = 0
-                    bow[word] = bow[word]+1
-
-    with open(fileOut, 'w') as f:
-        for k, v in bow.iteritems():
-            # print '%s %s ' % (k v)
-            f.write('%s %s\n' % (k, v))
-            if verbose:
-                print k, v
-                print len(bow)
-
-    return bow
-
-
 def pdf_bow(pdfPath, localDir, pdfFile=None, stemmerCMD=None, overwrite=False):
 
     print '- %s:' % pdfPath,
 
     # some vars
-    outDIR = localDir+"/"
+    outDIR = localDir+"/output/"
+
+    # Check if output folder has been created. Create otherwise
+    try: 
+        os.makedirs(outDIR)
+    except OSError:
+        if not os.path.isdir(outDIR):
+            raise
 
     if pdfFile is None:
         if not os.path.isdir(outDIR):
@@ -107,18 +77,8 @@ def pdf_bow(pdfPath, localDir, pdfFile=None, stemmerCMD=None, overwrite=False):
         print 'problem with pdftotext, returning'
         return
 
-    # stem file
-    # if stemmerCMD is not None:
-    #     suffix = '.stemmed'
-    #     os.system("%s '%s' > '%s'" %
-    #               (stemCMD, fileNameOut, fileNameOut+suffix))
-    #     fileNameOutStemmed = fileNameOut+suffix
-    #     fileNameOutBowStemmed = fileNameOutBow+suffix
-
     if not os.path.isfile(fileNameOutBow):
-        makeBow(fileNameOut, fileNameOutBow)
-    # if stemmerCMD is not None:
-    #     makeBow(fileNameOutStemmed, fileNameOutBowStemmed)
+        bow.preprocess_text(fileNameOut, fileNameOutBow)
 
 
 def parse_args():
@@ -140,16 +100,6 @@ def run():
 
     args = parse_args()
 
-    # make sure stemming is there
-    # stemmerCMD = os.path.dirname(sys.argv[0])+'./stemming'
-    # stemmerCMD = './stemming'
-    # if not os.path.isfile(stemmerCMD):
-    #  print 'Compiling stemmer'
-    #  print 'gcc -o stemming '+ stemmerCMD + '.c'
-    #  os.system('gcc -o stemming '+ stemmerCMD + '.c')
-    #  if not os.path.isfile(stemmerCMD):
-    #    print 'Cannot compile stemmer, aborting'
-
     if os.path.isdir(args.input):
         print 'Parsing all pdfs in the directory', args.input
         for f in glob(args.input+'/*'):
@@ -165,3 +115,7 @@ def run():
 
 if __name__ == '__main__':
     run()
+    '''
+    command to run the file:
+    python /Users/nus/git/tpms/pdf2bow/pdf2bow.py --input paper.pdf
+    '''

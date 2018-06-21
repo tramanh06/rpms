@@ -54,10 +54,7 @@ def write_to_file(file_location, data):
         f.write(data)
 
 
-def main():
-    inputfile = "paper.txt"
-    outputfile = "paper.preprocessing"
-    
+def preprocess_text(inputfile, outputfile):
     data = read_file(inputfile)
     words = tokenize(data)
     meaningful_words = remove_stopwords(words)
@@ -66,4 +63,6 @@ def main():
     write_to_file(outputfile, stemmed)
 
 if __name__ == '__main__':
-    main()
+    inputfile = "paper.txt"
+    outputfile = "paper.preprocessing"
+    preprocess_text(inputfile, outputfile)
