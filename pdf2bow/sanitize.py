@@ -112,7 +112,7 @@ def sanitize(w):
         w = re.sub(char, replace_char, w)
 
     # w = unicode(w, encoding='latin-1')
-    w = unicode(w, encoding='utf-8')
+    w = unicode(w, encoding='utf-8', errors='ignore')
     # w = w.encode('utf-8').strip()
 
     # This gets rid of accents
