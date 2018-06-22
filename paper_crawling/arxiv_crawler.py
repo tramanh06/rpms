@@ -2,15 +2,29 @@ import arxiv
 from urllib import urlencode
 
 # Reference for arxiv python is at https://github.com/lukasschwab/arxiv.py
+# Download any paper on arxiv from the title 
+# Paper downloaded is stored inside this code's folder
 
-title = '"Gaussian Process Decentralized Data Fusion Meets Transfer Learning in Large-Scale Distributed Cooperative Perception"' # title must be exact
-title = title.replace('-', ' ')
-title_prepended = 'ti:'+title
-results = arxiv.query(title_prepended)
 
-print results
+def download_from_arxiv(title):
+    title = title.replace('-', ' ')
+    title_prepended = 'ti:' + title
+    results = arxiv.query(title_prepended)
 
-arxiv.download(results[0], slugify=True)    # When slugify is True, the paper title will be stripped of non-alphanumeric characters before being used as a filename.
+    print results
+
+    arxiv.download(results[0], slugify=True)    # When slugify is True, the paper title will be stripped of non-alphanumeric characters before being used as a filename.
+
+
+def main():
+    title = '"Gaussian Process Decentralized Data Fusion Meets Transfer Learning in Large-Scale Distributed Cooperative Perception"'  # title must be exact
+    # title = '"Stochastic Variational Inference for Fully Bayesian Sparse Gaussian Process Regression Models"'
+    
+    download_from_arxiv(title)
+
+if __name__ == '__main__':
+    main()
+
 
 # For debugging purposes
 # url_args = urlencode({"search_query": 'ti:"Gaussian Process Decentralized Data Fusion Meets Transfer Learning in Large Scale Distributed Cooperative Perception"',

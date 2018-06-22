@@ -1,3 +1,9 @@
+* dblp_crawler.py: Look up dblp records given author's name
+
+* arxiv_crawler.py: download paper from arxiv given paper's title
+
+
+
 * paper_collection_direct_upload.php: script provides interface and
   crawling mechanism. 
 
