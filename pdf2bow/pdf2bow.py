@@ -37,10 +37,10 @@ def pdf_bow(pdfPath, localDir, pdfFile=None, stemmerCMD=None, overwrite=False):
     print '- %s:' % pdfPath,
 
     # some vars
-    outDIR = localDir+"/output/"
+    outDIR = localDir + "/output/"
 
     # Check if output folder has been created. Create otherwise
-    try: 
+    try:
         os.makedirs(outDIR)
     except OSError:
         if not os.path.isdir(outDIR):
@@ -55,15 +55,15 @@ def pdf_bow(pdfPath, localDir, pdfFile=None, stemmerCMD=None, overwrite=False):
                 raise
         pdfFile = os.path.basename(pdfPath)
         if re.search('\.[a-zA-Z0-9]{1,4}', pdfFile):
-            fileNameOut = outDIR+re.sub('\.[a-zA-Z0-9]{1,4}$', '.txt', pdfFile)
+            fileNameOut = outDIR + re.sub('\.[a-zA-Z0-9]{1,4}$', '.txt', pdfFile)
             fileNameOutBow = outDIR + \
                 re.sub('\.[a-zA-Z1-9]{1,4}$', '.bow', pdfFile)
         else:
-            fileNameOut = outDIR+pdfFile+'.txt'
-            fileNameOutBow = outDIR+pdfFile+'.bow'
+            fileNameOut = outDIR + pdfFile + '.txt'
+            fileNameOutBow = outDIR + pdfFile + '.bow'
     else:
-        fileNameOut = outDIR+pdfFile+'.txt'
-        fileNameOutBow = outDIR+pdfFile+'.bow'
+        fileNameOut = outDIR + pdfFile + '.txt'
+        fileNameOutBow = outDIR + pdfFile + '.bow'
 
     # get text
     if not os.path.isfile(fileNameOut) or os.path.getsize(fileNameOut) == 0 or overwrite:
@@ -73,7 +73,7 @@ def pdf_bow(pdfPath, localDir, pdfFile=None, stemmerCMD=None, overwrite=False):
         print 'not converting since output already exists'
 
     if not os.path.isfile(fileNameOut):
-        os.system('file '+fileNameOut)
+        os.system('file ' + fileNameOut)
         print 'problem with pdftotext, returning'
         return
 
@@ -102,7 +102,7 @@ def run():
 
     if os.path.isdir(args.input):
         print 'Parsing all pdfs in the directory', args.input
-        for f in glob(args.input+'/*'):
+        for f in glob(args.input + '/*'):
             # Only process pdf files
             if ispdf(f):
                 pdf_bow(f, args.output_dir, overwrite=args.overwrite)

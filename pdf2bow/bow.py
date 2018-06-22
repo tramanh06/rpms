@@ -63,6 +63,8 @@ def preprocess_text(inputfile, outputfile):
     write_to_file(outputfile, stemmed)
 
 if __name__ == '__main__':
-    inputfile = "paper.txt"
+    from os import path
+    output_dir = path.join(path.dirname(__file__), 'output/')
+    inputfile = output_dir + "paper.txt"
     outputfile = "paper.preprocessing"
     preprocess_text(inputfile, outputfile)
