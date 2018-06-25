@@ -3,43 +3,47 @@ This package calls the dblp REST api to retrieve structured list of
 publications given an author name
 '''
 
-
 import dblp
 import requests
 import json
+import logging
+from logging.config import fileConfig
+
+fileConfig('logging_config.ini')
+logger = logging.getLogger()
 
 
 def query_dblp_by_author(author):
     author = author.replace(' ', '_')
     url_template = "http://dblp.org/search/publ/api?q=author%3A<AUTHOR_NAME>%3A&format=json"
     query = url_template.replace("<AUTHOR_NAME>", author)
-    print 'Query dblp API: ' + query
+    logging.info('Query dblp API: ' + query)
     response = requests.get(query)
     return response
 
 
 def query_dblp_for_author_freetext_name(author_name):
     authors = dblp.search(author_name)
-    print 'Found ' + str(len(authors)) + ' authors:'
-    print ', '.join(map(lambda x: str(x), authors))
+    logging.info('Found ' + str(len(authors)) + ' authors:')
+    logging.info(', '.join(map(lambda x: str(x), authors)))
     return authors
 
 
 def print_publication_list(pub_dict):
     for author, publications in pub_dict.items():
-        print " ************* "
-        print " * AUTHOR: " + author
-        print " ************* "
-        print "List of publications"
+        logging.info(" ************* ")
+        logging.info(" * AUTHOR: " + author)
+        logging.info(" ************* ")
+        logging.info(" List of publications")
         for pub in publications:
-            print pub['title'] + "(" + pub['venue'] + ")"
+            logging.info(pub['title'] + "(" + pub['venue'] + ")")
 
 
 def dblp_crawler(author_name):
-    ''' Return dictionary of {'author': 'publications'}'''
+    ''' Returns list of dictionary: [{'author': {'publications': 'details'}}]'''
 
     authors = query_dblp_for_author_freetext_name(author_name)
-    print 'List of publications:'
+    logging.info('List of publications:')
     result = {}
     for author in authors:
         response = query_dblp_by_author(str(author))
