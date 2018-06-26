@@ -10,6 +10,8 @@ from paper_crawling import dblp_crawler, arxiv_crawler
 import os
 import logging
 from logging.config import fileConfig
+import utils
+from pdf2bow import pdf2bow
 
 fileConfig('logging_config.ini')
 logger = logging.getLogger()
@@ -22,15 +24,12 @@ dblp_crawler.print_publication_list(author_results)
 for author, publications in author_results.items():
     papers = [pub['title'] for pub in publications]
 
-    outDIR = "papers/"
-    # Check if output folder has been created. Create otherwise
-    try:
-        os.makedirs(outDIR)
-    except OSError:
-        if not os.path.isdir(outDIR):
-            raise
+    papers_DIR = "papers/"  # Only works when python file is run in the project root location
+    utils.is_folder_exists_create_otherwise(papers_DIR)
 
     logging.info("Downloading paper...")
-    arxiv_crawler.download_list_of_papers(papers[0:5], dirname=outDIR)
+    arxiv_crawler.download_list_of_papers(papers[0:5], dirname=papers_DIR)
+
+    pdf2bow.run(papers_DIR)
 
 

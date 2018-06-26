@@ -8,6 +8,7 @@ import sys
 from sanitize import sanitize
 from ispdf import ispdf
 import bow
+import utils
 
 sys.path += ['.']
 
@@ -38,13 +39,7 @@ def pdf_bow(pdfPath, localDir, pdfFile=None, stemmerCMD=None, overwrite=False):
 
     # some vars
     outDIR = localDir + "/output/"
-
-    # Check if output folder has been created. Create otherwise
-    try:
-        os.makedirs(outDIR)
-    except OSError:
-        if not os.path.isdir(outDIR):
-            raise
+    utils.is_folder_exists_create_otherwise(outDIR)
 
     if pdfFile is None:
         if not os.path.isdir(outDIR):
@@ -81,40 +76,31 @@ def pdf_bow(pdfPath, localDir, pdfFile=None, stemmerCMD=None, overwrite=False):
         bow.preprocess_text(fileNameOut, fileNameOutBow)
 
 
-def parse_args():
+def run(input_path, output_dir='.', overwrite=None):
+    '''
+    Arguments:
+    input_path: file path or directory path containing pdfs
+    output_dir: location of where the output folder will be created
+    overwrite: Boolean. whether or not to re-process previously processed PDFs
+    '''
 
-    parser = argparse.ArgumentParser(description='pdf2bow')
-    parser.add_argument('--output_dir', type=str,
-                        required=False, default='.', help="output directory")
-    parser.add_argument('--input', type=str, required=True,
-                        help="input PDF or directory")
-    parser.add_argument('--overwrite', type=bool, required=False,
-                        help="whether or not to re-process previously process PDFs", default=False)
-
-    args = parser.parse_args()
-
-    return args
-
-
-def run():
-
-    args = parse_args()
-
-    if os.path.isdir(args.input):
-        print 'Parsing all pdfs in the directory', args.input
-        for f in glob(args.input + '/*'):
+    if os.path.isdir(input_path):
+        print 'Parsing all pdfs in the directory', input_path
+        for f in glob(input_path + '/*'):
             # Only process pdf files
             if ispdf(f):
-                pdf_bow(f, args.output_dir, overwrite=args.overwrite)
+                pdf_bow(f, output_dir, overwrite=overwrite)
             else:
                 print 'not a pdf', f
     else:
-        print 'Path %s not directory' % args.input
-        pdf_bow(args.input, args.output_dir, overwrite=args.overwrite)
+        print 'Path %s not directory' % input_path
+        pdf_bow(input_path, output_dir, overwrite=overwrite)
 
 
 if __name__ == '__main__':
-    run()
+    run("/Users/nus/git/tpms/pdf2bow/paper.pdf",
+        output_dir='/Users/nus/git/tpms/pdf2bow/',
+        overwrite=True)
     '''
     command to run the file:
     python /Users/nus/git/tpms/pdf2bow/pdf2bow.py --input paper.pdf

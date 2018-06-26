@@ -1,14 +1,9 @@
 import re
 import nltk
 from nltk.stem.snowball import SnowballStemmer
-
-
-def read_file(file_location):
-    'Read text file, concatenate all lines into 1'
-
-    with open(file_location, 'rb') as f:
-        data = f.read().replace('\n', " ")
-    return data
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import utils
 
 
 def tokenize(data):
@@ -50,18 +45,14 @@ def stem_words(meaningful_words):
     return stemmed_words
 
 
-def write_to_file(file_location, data):
-    with open(file_location, 'w') as f:
-        f.write(data)
-
-
 def preprocess_text(inputfile, outputfile):
-    data = read_file(inputfile)
+    data = utils.read_file(inputfile)
     words = tokenize(data)
     meaningful_words = remove_stopwords(words)
     stemmed_words = stem_words(meaningful_words)
     stemmed = ' '.join(stemmed_words)
-    write_to_file(outputfile, stemmed)
+    utils.write_to_file(outputfile, stemmed)
+
 
 if __name__ == '__main__':
     from os import path
