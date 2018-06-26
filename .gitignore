@@ -5,6 +5,7 @@ __pycache__/
 *.bow
 *.txt
 .DS_Store
+*.json
 
 # C extensions
 *.so

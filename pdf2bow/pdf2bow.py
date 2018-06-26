@@ -22,15 +22,11 @@ sys.path += ['.']
 # - the script can also stem if given access to a stemmer (stemmerCMD variable)
 #
 # Author: Laurent Charlin (lcharlin@cs.toronto.edu)
+# Modified by: Tram Anh Nguyen (tramanh06@gmail.com)
 #
 #####################################################################
 
 pdf2textCMD = "pdftotext"
-
-# Other features to implement/think about:
-#   - Extract title, abstract, citations
-#   - Different inputs
-#     - file containing URLs (say one per line)
 
 
 def pdf_bow(pdfPath, localDir, pdfFile=None, stemmerCMD=None, overwrite=False):
@@ -38,7 +34,7 @@ def pdf_bow(pdfPath, localDir, pdfFile=None, stemmerCMD=None, overwrite=False):
     print '- %s:' % pdfPath,
 
     # some vars
-    outDIR = localDir + "/output/"
+    outDIR = localDir
     utils.is_folder_exists_create_otherwise(outDIR)
 
     if pdfFile is None:
@@ -99,7 +95,7 @@ def run(input_path, output_dir='.', overwrite=None):
 
 if __name__ == '__main__':
     run("/Users/nus/git/tpms/pdf2bow/paper.pdf",
-        output_dir='/Users/nus/git/tpms/pdf2bow/',
+        output_dir='/Users/nus/git/tpms/pdf2bow/output',
         overwrite=True)
     '''
     command to run the file:
