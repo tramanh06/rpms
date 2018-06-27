@@ -19,11 +19,11 @@ from paper_matching import similarity
 from pdf2bow import pdf2bow
 
 import json
+import multiprocessing as mp
+from tqdm import tqdm
 
 fileConfig('logging_config.ini')
 logger = logging.getLogger()
-
-researchers = ["Leong Tze Yun", "Bryan Low"]
 
 
 def prepare_bow_content(researcher):
@@ -53,16 +53,45 @@ def prepare_bow_content(researcher):
     return {'researcher': researcher, 'bow_content': all_bows}
 
 
-researchers_to_bows = [prepare_bow_content(researcher) for researcher in researchers]  # List of dictionary {researcher: all their papers' bow}
+if __name__ == '__main__':
+    # researchers = ["Leong Tze Yun", "Bryan Low", "Harold Soh", "David Hsu", "Kuldeep S. Meel", "Lee Wee Sun"]
+    researchers = ["Leong Tze Yun", "Bryan Low", "Harold Soh", "David Hsu"]
 
-with open("data.json", 'wb') as outfile:
-    json.dump(researchers_to_bows, outfile)
+    researchers_to_bows = [prepare_bow_content(researcher) for researcher in researchers]  # List of dictionary {researcher: all their papers' bow}
+    # pool = mp.Pool()
+    # # researchers_to_bows = list(tqdm(pool.imap(prepare_bow_content, researchers)))
+    # researchers_to_bows = pool.map(prepare_bow_content, researchers)
 
+    # write data to json file
+    with open("data.json", 'wb') as outfile:
+        json.dump(researchers_to_bows, outfile)
+
+
+# # read data from json file
+# with open('data.json') as f:
+#     data = json.load(f)
+
+# similarity.build_corpus_from_json(data)
+
+
+
+# dictionary = corpora.Dictionary.load('dictionary.dict')
+# corpus = corpora.MmCorpus("corpus.mm")
+# lda = models.LdaModel.load("model.lda") #result from running online lda (training)
+
+# index = similarities.MatrixSimilarity(lda[corpus])
+# index.save("simIndex.index")
+
+# docname = "docs/the_doc.txt"
+# doc = open(docname, 'r').read()
+# vec_bow = dictionary.doc2bow(doc.lower().split())
+# vec_lda = lda[vec_bow]
+
+# sims = index[vec_lda]
+# sims = sorted(enumerate(sims), key=lambda item: -item[1])
+# print sims
 
     
-    # _, bow_corpus = similarity.build_corpus(bow_DIR)
-    # similarity.tfidf_transform(bow_corpus)
-
 # LDA IMPLEMENTATION USING GENSIM (TBC)
 # Lda = gensim.models.ldamodel.LdaModel
 # ldamodel = Lda(bow_corpus, num_topics=10, id2word=dictionary, passes=50)

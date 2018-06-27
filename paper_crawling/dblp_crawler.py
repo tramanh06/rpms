@@ -14,6 +14,7 @@ logger = logging.getLogger()
 
 
 def query_dblp_by_author(author):
+    # TODO: put check to abort if len(authors) > 2
     author = author.replace(' ', '_')
     url_template = "http://dblp.org/search/publ/api?q=author%3A<AUTHOR_NAME>%3A&format=json"
     query = url_template.replace("<AUTHOR_NAME>", author)
