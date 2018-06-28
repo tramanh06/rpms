@@ -59,12 +59,12 @@ def tfidf_transform(corpus_bow, document):
     document_tfidf = tfidf[document]
 
     index = similarities.MatrixSimilarity(tfidf[corpus_bow])    # This needs to run against corpus
-    sims = index[document]
+    sims = index[document_tfidf]
     print sims  
 
 
 def main():
-    # TODO bug here. SImilarity(doc1, doc1) != 1
+    # TODO bug here. Similarity(doc1, doc1) != 1
     text_files_location = path.join(path.dirname(__file__), '../pdf2bow/output/')
     _, corpus_bow = build_corpus(text_files_location)
     tfidf_transform(corpus_bow, corpus_bow)
