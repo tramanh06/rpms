@@ -1,9 +1,10 @@
 import os
+import io
 
 
 def read_file(file_location):
     ' Read text file, concatenate all lines into 1 '
-    with open(file_location, 'rb') as f:
+    with io.open(file_location, 'r', encoding='utf-8', errors='ignore') as f:
         data = f.read().replace('\n', " ")
     return data
 

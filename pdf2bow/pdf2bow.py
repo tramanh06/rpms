@@ -72,7 +72,7 @@ def pdf_bow(pdfPath, localDir, pdfFile=None, stemmerCMD=None, overwrite=False):
         bow.preprocess_text(fileNameOut, fileNameOutBow)
 
 
-def run(input_path, output_dir='.', overwrite=None):
+def run(input_path, output_dir='./', overwrite=None):
     '''
     Arguments:
     input_path: file path or directory path containing pdfs
