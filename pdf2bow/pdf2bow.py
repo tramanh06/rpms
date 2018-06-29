@@ -29,12 +29,21 @@ sys.path += ['.']
 pdf2textCMD = "pdftotext"
 
 
-def pdf_bow(pdfPath, localDir, pdfFile=None, stemmerCMD=None, overwrite=False):
+def pdf_bow(pdfPath, outDIR, pdfFile=None, overwrite=False):
+    """Convert a pdf file to stemmed, tokenized, non-stopword strings.
+
+    Args:
+        pdfPath (str): Path to pdf
+        outDIR (str): Directory where the bag-of-word file will be stored
+        
+    Returns:
+        None. Bag-of-word file will be created in the outDIR folder
+
+    """
 
     print '- %s:' % pdfPath,
 
     # some vars
-    outDIR = localDir
     utils.is_folder_exists_create_otherwise(outDIR)
 
     if pdfFile is None:
@@ -73,12 +82,16 @@ def pdf_bow(pdfPath, localDir, pdfFile=None, stemmerCMD=None, overwrite=False):
 
 
 def run(input_path, output_dir='./', overwrite=None):
-    '''
-    Arguments:
-    input_path: file path or directory path containing pdfs
-    output_dir: location of where the output folder will be created
-    overwrite: Boolean. whether or not to re-process previously processed PDFs
-    '''
+    """Convert pdf(s) in input_path to pre Bag-of-word file(s).
+
+    Args:
+        input_path (str): File path or directory path containing pdfs
+        output_dir (str): Location of where the output folder will be created
+        overwrite (Boolean): Whether or not to re-process previously processed PDFs
+
+    Returns:
+        None. Bag-of-word file will be created in the outDIR folder
+    """
 
     if os.path.isdir(input_path):
         print 'Parsing all pdfs in the directory', input_path

@@ -1,6 +1,7 @@
 import arxiv
 from urllib import urlencode
 import logging
+import multiprocessing as mp
 
 # Reference for arxiv python is at https://github.com/lukasschwab/arxiv.py
 # Download any paper on arxiv from the title 
@@ -15,16 +16,23 @@ def download_from_arxiv(title, dirname='./'):
     logging.debug(results)
 
     logging.info("Downloading " + title)
-    arxiv.download(results[0], dirname=dirname, slugify=True)    # When slugify is True, the paper title will be stripped of non-alphanumeric characters before being used as a filename.
+    return arxiv.download(results[0], dirname=dirname, slugify=True)    # When slugify is True, the paper title will be stripped of non-alphanumeric characters before being used as a filename.
 
 
-def download_list_of_papers(titles, dirname='./'):
+def download_list_of_papers_parallel(titles, dirname='./'):
+    print("There are %d CPUs on this machine" % mp.cpu_count())
+    pool = mp.Pool(processes=5)
+    filenames = [pool.apply(download_from_arxiv, args=(title,dirname)) for title in titles]
+
+
+def download_list_of_papers_serial(titles, dirname='./'):
     for paper in titles:
         download_from_arxiv(paper, dirname)
 
 
 def main():
-    title = '"Multi-robot active sensing of non-stationary gaussian process-based environmental phenomena"'  # title must be exact
+    logging.getLogger().setLevel(logging.INFO)
+    title = '"Gaussian Process Decentralized Data Fusion Meets Transfer Learning in Large Scale Distributed Cooperative Perception"'  # title must be exact
     
     download_from_arxiv(title)
 

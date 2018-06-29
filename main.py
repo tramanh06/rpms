@@ -21,6 +21,8 @@ from paper_crawling import arxiv_crawler, dblp_crawler
 from paper_matching import similarity
 from pdf2bow import pdf2bow
 
+import multiprocessing as mp
+
 fileConfig('logging_config.ini')
 logger = logging.getLogger()
 
@@ -40,7 +42,7 @@ def prepare_bow_content(researcher):
         utils.is_folder_exists_create_otherwise(papers_DIR)
 
         logging.info("Downloading paper...")
-        arxiv_crawler.download_list_of_papers(papers[0:5], dirname=papers_DIR)
+        arxiv_crawler.download_list_of_papers_parallel(papers[0:5], dirname=papers_DIR)
 
     # Run BOW
     pdf2bow.run(input_path=papers_DIR, output_dir=bow_DIR)
@@ -54,32 +56,32 @@ def prepare_bow_content(researcher):
 
 if __name__ == '__main__':
     # researchers = ["Leong Tze Yun", "Bryan Low", "Harold Soh", "David Hsu", "Kuldeep S. Meel", "Lee Wee Sun"]
-    researchers = ["Leong Tze Yun", "Bryan Low", "Harold Soh", "David Hsu"]
+    researchers = ["Leong Tze Yun", "Bryan Low"]
     test_document_path = "/Users/nus/Dropbox/NUS/Papers/Scalable and accurate deep learning with electronic healthrecords.pdf"
 
-    # researchers_to_bows = [prepare_bow_content(researcher) for researcher in researchers]  # List of dictionary {researcher: all their papers' bow}
+    researchers_to_bows = [prepare_bow_content(researcher) for researcher in researchers]  # List of dictionary {researcher: all their papers' bow}
     # pool = mp.Pool()
-    # # researchers_to_bows = list(tqdm(pool.imap(prepare_bow_content, researchers)))
     # researchers_to_bows = pool.map(prepare_bow_content, researchers)
+    # researchers_to_bows = list(tqdm(pool.imap(prepare_bow_content, researchers)))
 
     # write data to json file
-    # with open("data.json", 'wb') as outfile:
-    #     json.dump(researchers_to_bows, outfile)
+    with open("data.json", 'wb') as outfile:
+        json.dump(researchers_to_bows, outfile)
 
-    # Get tokenized for test file
-    pdf2bow.run(input_path=test_document_path)
+    # # Get tokenized for test file
+    # pdf2bow.run(input_path=test_document_path)
 
-    # read data from json training file
-    with open('data.json') as f:
-        data = json.load(f)
+    # # read data from json training file
+    # with open('data.json') as f:
+    #     data = json.load(f)
 
-    dictionary, corpus_bow = similarity.build_corpus_from_json(researchers_bow=data)
+    # dictionary, corpus_bow = similarity.build_corpus_from_json(researchers_bow=data)
 
-    test_data_bow = dictionary.doc2bow(utils.read_file(test_document_path.split("/")[-1].replace("pdf", "bow")).split())
-    print "List of researchers"
-    cosine_similarity = similarity.tfidf_transform(corpus_bow=corpus_bow, document=test_data_bow)
-    for author_bow, score in zip(data, cosine_similarity):
-        print ": ".join([author_bow["researcher"], str(score)])
+    # test_data_bow = dictionary.doc2bow(utils.read_file(test_document_path.split("/")[-1].replace("pdf", "bow")).split())
+    # print "List of researchers"
+    # cosine_similarity = similarity.tfidf_transform(corpus_bow=corpus_bow, document=test_data_bow)
+    # for author_bow, score in zip(data, cosine_similarity):
+    #     print ": ".join([author_bow["researcher"], str(score)])
     
 
 
