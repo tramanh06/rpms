@@ -6,7 +6,7 @@ from paper_crawling import arxiv_crawler
 from timeit import default_timer as timer
 
 
-class MyTestCase(unittest.TestCase):
+class TestArxivCrawler(unittest.TestCase):
     def setUp(self):
         logging.getLogger().setLevel(logging.INFO)
         
