@@ -2,27 +2,45 @@ import arxiv
 from urllib import urlencode
 import logging
 import multiprocessing as mp
+import os
 
 # Reference for arxiv python is at https://github.com/lukasschwab/arxiv.py
 # Download any paper on arxiv from the title 
 # Paper downloaded is stored inside this code's folder
 
 
+def get_filename(dirname, title):
+    return dirname + arxiv.to_slug(title) + ".pdf"
+
+
 def download_from_arxiv(title, dirname='./'):
+    """ Download paper from arxiv from the title
+
+    Args:
+        title (str): Full title of the paper
+        dirname (str): Output directory of the pdf after downloaded
+
+    Returns:
+        Filename of the downloaded pdf
+
+    """
     title = title.replace('-', ' ')
     title_prepended = 'ti:' + title
     results = arxiv.query(title_prepended)
 
     logging.debug(results)
-
-    logging.info("Downloading " + title)
-    return arxiv.download(results[0], dirname=dirname, slugify=True)    # When slugify is True, the paper title will be stripped of non-alphanumeric characters before being used as a filename.
+    if not os.path.isfile(get_filename(dirname, title)):
+        logging.info("Downloading " + title)
+        return arxiv.download(results[0], dirname=dirname, slugify=True)    # When slugify is True, the paper title will be stripped of non-alphanumeric characters before being used as a filename.
+    else:
+        logging.info("Paper has already been downloaded previously. Will skip downloading this file")
+        return None
 
 
 def download_list_of_papers_parallel(titles, dirname='./'):
     print("There are %d CPUs on this machine" % mp.cpu_count())
     pool = mp.Pool(processes=5)
-    filenames = [pool.apply(download_from_arxiv, args=(title,dirname)) for title in titles]
+    filenames = [pool.apply(download_from_arxiv, args=(title, dirname)) for title in titles]
 
 
 def download_list_of_papers_serial(titles, dirname='./'):

@@ -42,7 +42,7 @@ def prepare_bow_content(researcher):
         utils.is_folder_exists_create_otherwise(papers_DIR)
 
         logging.info("Downloading paper...")
-        arxiv_crawler.download_list_of_papers_parallel(papers[0:5], dirname=papers_DIR)
+        arxiv_crawler.download_list_of_papers_parallel(papers, dirname=papers_DIR)
 
     # Run BOW
     pdf2bow.run(input_path=papers_DIR, output_dir=bow_DIR)
@@ -55,16 +55,19 @@ def prepare_bow_content(researcher):
 
 
 if __name__ == '__main__':
-    # researchers = ["Leong Tze Yun", "Bryan Low", "Harold Soh", "David Hsu", "Kuldeep S. Meel", "Lee Wee Sun"]
-    researchers = ["Harold Soh"]
+    researchers = ["Leong Tze Yun", "Bryan Low", "Harold Soh", "David Hsu", "Kuldeep S. Meel", "Lee Wee Sun"]
+    # researchers = ["Leong Tze Yun"]
 
     researchers_to_bows = [prepare_bow_content(researcher) for researcher in researchers]  # List of dictionary, ie [{researcher: all their papers' bow}]
     # pool = mp.Pool()
     # researchers_to_bows = pool.map(prepare_bow_content, researchers)
     # researchers_to_bows = list(tqdm(pool.imap(prepare_bow_content, researchers)))
 
-    with open('data.json') as f:
-        data = json.load(f) 
+    try:
+        with open('data.json') as f:
+            data = json.load(f)
+    except IOError:  # When data.json is not available
+        data = []
 
     researchers = [x["researcher"] for x in data]
 
