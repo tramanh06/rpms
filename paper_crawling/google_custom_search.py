@@ -20,6 +20,7 @@ def google_search(search_term, api_key, cse_id, **kwargs):
 
     """
 
+    logging.info("Searching Google with search term: %s", search_term)
     service = build("customsearch", "v1", developerKey=api_key, cache_discovery=False)
     res = service.cse().list(q=search_term, cx=cse_id, **kwargs).execute()
     if res['searchInformation']['totalResults'] == '0':
@@ -40,6 +41,8 @@ def download_link_from_google(results, outfile):
         Boolean. True if file can be found and downloaded. False otherwise.
         
     """
+    results = filter(lambda x: 'ieeexplore' not in x['link'], results)  # Remove ieeexplore results
+
     for result in results:
         pdf_url = result['link']
         logging.info("Downloading paper %s from url: %s", outfile, pdf_url)
@@ -53,19 +56,25 @@ def download_link_from_google(results, outfile):
 
 
 def main():
+    logging.getLogger().setLevel(logging.INFO)
+
     config = configparser.ConfigParser()
     config.read('venv/keys.ini')
 
     my_api_key = config['GOOGLE']['API_KEY']
     my_cse_id = config['GOOGLE']['CSE_ID']
 
+    # Test for those cases
+    # "Concept Based Hybrid Fusion of Multimodal Event Signals" filetype:PDF
+    # "Scalable Decision-Theoretic Coordination and Control for Real-time Active Multi-Camera Surveillance" filetype:pdf
+    # Supermodular mean squared error minimization for sensor scheduling in optimal Kalman Filtering
+    # "Act to See and See to Act POMDP planning for objects search in clutter" filetype:pdf
     results = google_search(
-        '"SEAPoT RL   Selective Exploration Algorithm for Policy Transfer in RL"' + ' filetype:PDF', 
-        my_api_key, my_cse_id, num=10)
+        '"Supermodular mean squared error minimization for sensor scheduling in optimal Kalman Filtering"' + ' filetype:PDF',
+        my_api_key, my_cse_id)
 
-    if results:
-        downloaded_pdf = "abc.pdf"
-        download_link_from_google(results, downloaded_pdf)
+    downloaded_pdf = "abc.pdf"
+    download_link_from_google(results, downloaded_pdf)
 
 
 if __name__ == '__main__':
