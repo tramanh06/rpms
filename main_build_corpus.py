@@ -6,6 +6,7 @@ Last Modified: Monday, 25th June 2018 10:07:50 am
 Modified By: TramAnh Nguyen 
 -----
 '''
+import configparser
 import glob
 import json
 import logging
@@ -21,10 +22,14 @@ from paper_crawling import arxiv_crawler, dblp_crawler
 from paper_matching import similarity
 from pdf2bow import pdf2bow
 
-import multiprocessing as mp
-
 fileConfig('logging_config.ini')
 logger = logging.getLogger()
+
+config = configparser.ConfigParser()
+config.read('venv/keys.ini')
+
+my_api_key = config['GOOGLE']['API_KEY']
+my_cse_id = config['GOOGLE']['CSE_ID']
 
 
 def prepare_bow_content(researcher):
@@ -42,7 +47,11 @@ def prepare_bow_content(researcher):
         utils.is_folder_exists_create_otherwise(papers_DIR)
 
         logging.info("Downloading paper...")
-        arxiv_crawler.download_list_of_papers_serial(papers, dirname=papers_DIR)
+        arxiv_crawler.download_list_of_papers_serial(
+            titles=papers,
+            dirname=papers_DIR,
+            my_api_key=my_api_key,
+            my_cse_id=my_cse_id)
 
     # Run BOW
     pdf2bow.run(input_path=papers_DIR, output_dir=bow_DIR)
@@ -55,8 +64,8 @@ def prepare_bow_content(researcher):
 
 
 if __name__ == '__main__':
-    researchers = ["Leong Tze Yun", "Bryan Low", "Harold Soh", "David Hsu", "Kuldeep S. Meel", "Lee Wee Sun"]
-    # researchers = ["Leong Tze Yun"]
+    # researchers = ["Leong Tze Yun", "Bryan Low", "Harold Soh", "David Hsu", "Kuldeep S. Meel", "Lee Wee Sun"]
+    researchers = ["Leong Tze Yun"]
 
     researchers_to_bows = [prepare_bow_content(researcher) for researcher in researchers]  # List of dictionary, ie [{researcher: all their papers' bow}]
     # pool = mp.Pool()
@@ -77,5 +86,3 @@ if __name__ == '__main__':
     # write data to json file
     with open("data.json", 'wb') as outfile:
         json.dump(data, outfile)
-
-
