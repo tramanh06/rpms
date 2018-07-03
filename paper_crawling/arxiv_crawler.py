@@ -14,7 +14,7 @@ def get_filename(dirname, title):
 
 
 def download_from_arxiv(title, dirname='./'):
-    """ Download paper from arxiv from the title
+    """Download arxiv paper from the title
 
     Args:
         title (str): Full title of the paper

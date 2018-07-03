@@ -42,7 +42,7 @@ def prepare_bow_content(researcher):
         utils.is_folder_exists_create_otherwise(papers_DIR)
 
         logging.info("Downloading paper...")
-        arxiv_crawler.download_list_of_papers_parallel(papers, dirname=papers_DIR)
+        arxiv_crawler.download_list_of_papers_serial(papers, dirname=papers_DIR)
 
     # Run BOW
     pdf2bow.run(input_path=papers_DIR, output_dir=bow_DIR)
