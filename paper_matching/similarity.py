@@ -4,6 +4,7 @@ import glob
 from os import path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import utils
+import logging
 
 # gensim reference is from https://gist.github.com/clemsos/7692685#file-gensim_workflow-py-L81 
 
@@ -47,7 +48,7 @@ def tfidf_transform(corpus_bow, document):
 
     index = similarities.MatrixSimilarity(tfidf[corpus_bow])    # This needs to run against corpus
     sims = index[document_tfidf]
-    print sims  
+    logging.debug("Similarity matrix: %s", sims)
     return sims
 
 
