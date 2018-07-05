@@ -67,7 +67,7 @@ def main():
     # Test for those cases
     # "Concept Based Hybrid Fusion of Multimodal Event Signals" filetype:PDF
     # "Scalable Decision-Theoretic Coordination and Control for Real-time Active Multi-Camera Surveillance" filetype:pdf
-    # Supermodular mean squared error minimization for sensor scheduling in optimal Kalman Filtering
+    # Supermodular mean squared error minimization for sensor scheduling in optimal Kalman Filtering -- still can't retrieve the nus link for this
     # "Act to See and See to Act POMDP planning for objects search in clutter" filetype:pdf
     results = google_search(
         '"Supermodular mean squared error minimization for sensor scheduling in optimal Kalman Filtering"' + ' filetype:PDF',

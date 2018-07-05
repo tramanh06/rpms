@@ -30,6 +30,8 @@ def build_dictionary(corpus):
     # BOW for each document
     dictionary = corpora.Dictionary(corpus)
     corpus_bow = [dictionary.doc2bow(t) for t in corpus]
+    dictionary.save(fname_or_handle="dictionary.dict")
+    corpora.MmCorpus.serialize("corpus.mm", corpus_bow)
     return dictionary, corpus_bow
 
 
@@ -60,21 +62,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-# LDA code
-# dictionary = corpora.Dictionary.load('dictionary.dict')
-# corpus = corpora.MmCorpus("corpus.mm")
-# lda = models.LdaModel.load("model.lda") #result from running online lda (training)
-
-# index = similarities.MatrixSimilarity(lda[corpus])
-# index.save("simIndex.index")
-
-# docname = "docs/the_doc.txt"
-# doc = open(docname, 'r').read()
-# vec_bow = dictionary.doc2bow(doc.lower().split())
-# vec_lda = lda[vec_bow]
-
-# sims = index[vec_lda]
-# sims = sorted(enumerate(sims), key=lambda item: -item[1])
-# print sims

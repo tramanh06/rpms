@@ -9,7 +9,6 @@ from timeit import default_timer as timer
 class TestArxivCrawler(unittest.TestCase):
     def setUp(self):
         logging.getLogger().setLevel(logging.INFO)
-        
 
     def test_single_download(self):
         start = timer()
