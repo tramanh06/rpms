@@ -15,6 +15,7 @@ install dependencies for the project, once a virtual environment has been activa
 virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
+python -m spacy download en
 ```
 
 

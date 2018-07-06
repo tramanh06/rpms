@@ -2,10 +2,17 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.pdf
+
+# NLP intermediate data
 *.bow
 *.txt
 .DS_Store
 *.json
+*.dict
+*.mm
+*.index
+
+
 
 # C extensions
 *.so
