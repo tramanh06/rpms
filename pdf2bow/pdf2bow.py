@@ -43,7 +43,7 @@ def pdf_bow(pdfPath, outDIR, pdfFile=None, overwrite=False):
 
     print '- %s:' % pdfPath,
 
-    # some vars
+    # Check if out folder exists, create otherwise
     utils.is_folder_exists_create_otherwise(outDIR)
 
     if pdfFile is None:
@@ -91,6 +91,7 @@ def run(input_path, output_dir='./', overwrite=None):
 
     Returns:
         None. Bag-of-word file will be created in the outDIR folder
+
     """
 
     if os.path.isdir(input_path):
