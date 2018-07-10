@@ -15,13 +15,19 @@ install dependencies for the project, once a virtual environment has been activa
 virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
-python -m spacy download en
 ```
 
+Unix package pdftotext is needed to convert pdf to txt file
+`brew cask install pdftotext`
+
+
+Spacy's English dictionary is needed for tokenization later
+`python -m spacy download en`
 
 
 References
 ----------
 
 https://bitbucket.org/lcharlin/tpms
+
 http://papermatching.cs.toronto.edu/
