@@ -19,13 +19,6 @@ def build_corpus(text_files_location):
     return dictionary, corpus_bow
 
 
-def build_corpus_from_json(researchers_bow):
-    corpus = [researcher_bow['bow_content'].split() for researcher_bow in researchers_bow]
-    
-    dictionary, corpus_bow = build_dictionary(corpus)
-    return dictionary, corpus_bow
-
-
 def build_dictionary(corpus):
     # BOW for each document
     dictionary = corpora.Dictionary(corpus)

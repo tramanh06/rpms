@@ -60,7 +60,6 @@ def bigram():
 
     # print data
     # split document into sentences
-    # sentences = nltk.sent_tokenize(data)
     sentences = data
 
     # Split sentences into words
@@ -123,22 +122,4 @@ def main():
 if __name__ == '__main__':
     main()    
 
-
-
-
-
-
-# index = similarities.MatrixSimilarity(lda[corpus])
-# index.save("simIndex.index")
-
-# docname = "docs/the_doc.txt"
-# doc = open(docname, 'r').read()
-# vec_bow = dictionary.doc2bow(doc.lower().split())
-# vec_lda = lda[vec_bow]
-
-# sims = index[vec_lda]
-# sims = sorted(enumerate(sims), key=lambda item: -item[1])
-# print sims
-
-    
 

@@ -42,12 +42,15 @@ if __name__ == '__main__':
         if os.path.isdir(papers_sub_dir):
             bow_sub_DIR = os.path.join(bow_DIR, o, "")
             all_texts = prepare_bow_content(papers_sub_dir, bow_sub_DIR)
-            utils.write_to_file(bow_sub_DIR + "bow.txt", all_texts)
-            researchers_to_bows.append({'researcher': o, 'bow_content': all_texts})
 
-    # pool = mp.Pool()
-    # researchers_to_bows = pool.map(prepare_bow_content, researchers)
-    # researchers_to_bows = list(tqdm(pool.imap(prepare_bow_content, researchers)))
+            # Persist to intermediate file 
+            outfile_location = os.path.join(bow_sub_DIR, "_.json")
+            content = {o: all_texts}
+            with open(outfile_location, 'wb') as f:
+                json.dump(content, f)
+
+            # Add to master list
+            researchers_to_bows.append({'researcher': o, 'bow_content': all_texts})
 
     try:
         with open('data.json') as f:

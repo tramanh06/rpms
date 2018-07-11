@@ -15,8 +15,9 @@ def main():
     # read data from json training file
     with open('data.json') as f:
         data = json.load(f)
- 
-    dictionary, corpus_bow = similarity.build_corpus_from_json(researchers_bow=data)
+
+    corpus = build_corpus_from_json(researchers_bow=data)
+    dictionary, corpus_bow = similarity.build_dictionary(corpus)
 
     test_data_bow = dictionary.doc2bow(utils.read_file(test_document_path.split("/")[-1].replace("pdf", "bow")).split())
     logging.info("***********")
@@ -28,6 +29,11 @@ def main():
     zipped.sort(key=lambda t: t[1], reverse=True)
     for author_bow, score in zipped:
         logging.info(": ".join([author_bow["researcher"], str(score)]))
+ 
+
+def build_corpus_from_json(researchers_bow):
+    corpus = [researcher_bow['bow_content'].split() for researcher_bow in researchers_bow]
+    return corpus
     
 
 if __name__ == '__main__':
