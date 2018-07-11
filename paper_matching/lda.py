@@ -64,6 +64,7 @@ def bigram():
 
     # Split sentences into words
     data_words = list(sent_to_words(sentences))
+    # print 'datawords'
     # print data_words[:1]
 
     # Create bigram phrases when necessary

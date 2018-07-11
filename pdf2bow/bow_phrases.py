@@ -9,6 +9,8 @@ from nltk.corpus import stopwords
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import utils
+import nltk
+nltk.download('words')
 
 
 def read_tokenized_files(directory="./"):
@@ -16,10 +18,16 @@ def read_tokenized_files(directory="./"):
     return all_tok
 
 
+def sent_to_words(sentences):
+    for sentence in sentences:
+        yield(gensim.utils.simple_preprocess(sentence, deacc=True))  # deacc=True removes punctuations
+
+
 # Define functions for stopwords, bigrams, trigrams and lemmatization
 def remove_stopwords(texts):
     stop_words = stopwords.words('english')
-    return [[word for word in gensim.utils.simple_preprocess(doc, deacc=True) if word not in stop_words] for doc in texts]
+    # english_words = set(nltk.corpus.words.words())
+    return [[word for word in gensim.utils.simple_preprocess(str(doc), deacc=True) if word not in stop_words] for doc in texts]
 
 
 def make_bigrams(texts, bigram_mod):
@@ -37,16 +45,25 @@ def lemmatization(texts, allowed_postags=['NOUN', 'ADJ', 'VERB', 'ADV']):
     return texts_out
 
 
-def text_preprocess_with_phrases(docs):
+def text_preprocess_with_phrases(docs, bigram_mod=None):
     '''
     Do phrase tokenization + stopword removal
 
     docs (list): List of string
     '''
 
-    # Create bigram phrases when necessary
-    bigram = gensim.models.Phrases(docs)
-    bigram_mod = gensim.models.phrases.Phraser(bigram)
+    print "len(docs) = " + str(len(docs))
+
+    # Split sentences into words
+    docs = list(sent_to_words(docs))
+
+    print "First document: " 
+    print docs[:1]
+
+    if not bigram_mod:
+        # Create bigram phrases when necessary
+        bigram = gensim.models.Phrases(docs)
+        bigram_mod = gensim.models.phrases.Phraser(bigram)
 
     # Remove Stop Words
     data_words_nostops = remove_stopwords(docs)
@@ -57,8 +74,8 @@ def text_preprocess_with_phrases(docs):
     # Do lemmatization keeping only noun, adj, vb, adv
     data_lemmatized = lemmatization(data_words_bigrams, allowed_postags=['NOUN', 'ADJ', 'VERB', 'ADV'])
 
-    print data_lemmatized[:1]
+    print(data_lemmatized[:1])
 
-    return data_lemmatized
+    return data_lemmatized, bigram_mod
 
 

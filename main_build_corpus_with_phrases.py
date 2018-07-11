@@ -3,7 +3,7 @@ import glob
 import utils
 import json
 from pdf2bow import bow_phrases
-
+import pickle
 
 def extract_text_files(directory):
     all_txt = [utils.read_file(filename) for filename in glob.glob(directory + '*.txt')]
@@ -38,20 +38,21 @@ if __name__ == '__main__':
     print num_publications
     
     stream_of_docs = [paper for x in researchers_to_bow for paper in x["bow_content"]]  # Flatten a list of list
-    tokenized_docs = bow_phrases.text_preprocess_with_phrases(stream_of_docs)
+    tokenized_docs, bigram_model = bow_phrases.text_preprocess_with_phrases(stream_of_docs)
+    pickle.dump(bigram_model, open("bigram_model.p", "wb"))
 
     unflattened_docs = split_list_by_indices(tokenized_docs, num_publications)
 
     authors = [x['researcher'] for x in researchers_to_bow]
 
-    researchers_to_bow_with_phases = []
+    researchers_to_bow_with_phrases = []
     for author, text_tokens in zip(authors, unflattened_docs):
         aggregated_texts = ' '.join([word for paper in text_tokens for word in paper])
-        researchers_to_bow_with_phases.append({'researcher': author, 'bow_content': aggregated_texts})
-        utils.write_to_file(os.path.join(data_directory, author, "_with_phases.all"), aggregated_texts)
+        researchers_to_bow_with_phrases.append({'researcher': author, 'bow_content': aggregated_texts})
+        utils.write_to_file(os.path.join(data_directory, author, "_with_phrases.all"), aggregated_texts)
     
-    with open("data_with_phases.json", 'wb') as f:
-        json.dump(researchers_to_bow_with_phases, f)
+    with open("data_with_phrases.json", 'wb') as f:
+        json.dump(researchers_to_bow_with_phrases, f)
 
 
 

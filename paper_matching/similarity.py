@@ -15,17 +15,17 @@ def build_corpus(text_files_location):
     # Build corpus
     corpus = [utils.read_file(filename).split(' ') for filename in glob.glob(text_files_location + '*.bow')]
 
-    dictionary, corpus_bow = build_dictionary(corpus)
-    return dictionary, corpus_bow
+    dictionary, doc_term_matrix = build_dictionary(corpus)
+    return dictionary, doc_term_matrix
 
 
 def build_dictionary(corpus):
     # BOW for each document
     dictionary = corpora.Dictionary(corpus)
-    corpus_bow = [dictionary.doc2bow(t) for t in corpus]
+    doc_term_matrix = [dictionary.doc2bow(t) for t in corpus]
     dictionary.save(fname_or_handle="dictionary.dict")
-    corpora.MmCorpus.serialize("corpus.mm", corpus_bow)
-    return dictionary, corpus_bow
+    corpora.MmCorpus.serialize("corpus.mm", doc_term_matrix)
+    return dictionary, doc_term_matrix
 
 
 def tfidf_transform(corpus_bow, document):

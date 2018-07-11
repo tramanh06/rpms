@@ -37,7 +37,7 @@ def pdf_bow(pdfPath, outDIR, pdfFile=None, overwrite=False):
         outDIR (str): Directory where the bag-of-word file will be stored
         
     Returns:
-        None. Bag-of-word file will be created in the outDIR folder
+        Filename of the bow file. Bag-of-word file will be created in the outDIR folder
 
     """
 
@@ -79,6 +79,7 @@ def pdf_bow(pdfPath, outDIR, pdfFile=None, overwrite=False):
 
     if not os.path.isfile(fileNameOutBow):
         bow.preprocess_text(fileNameOut, fileNameOutBow)
+        return fileNameOutBow
 
 
 def run(input_path, output_dir='./', overwrite=None):
@@ -90,21 +91,25 @@ def run(input_path, output_dir='./', overwrite=None):
         overwrite (Boolean): Whether or not to re-process previously processed PDFs
 
     Returns:
-        None. Bag-of-word file will be created in the outDIR folder
+        Filename of the output bag-of-word file. Bag-of-word file will be created in the outDIR folder
 
     """
 
     if os.path.isdir(input_path):
         print 'Parsing all pdfs in the directory', input_path
+        paths = []
         for f in glob(input_path + '/*'):
             # Only process pdf files
             if ispdf(f):
-                pdf_bow(f, output_dir, overwrite=overwrite)
+                bow_filename = pdf_bow(f, output_dir, overwrite=overwrite)
+                paths.append(bow_filename)
             else:
                 print 'not a pdf', f
+        return paths
     else:
         print 'Path %s not directory' % input_path
-        pdf_bow(input_path, output_dir, overwrite=overwrite)
+        bow_filename = pdf_bow(input_path, output_dir, overwrite=overwrite)
+        return bow_filename
 
 
 if __name__ == '__main__':
