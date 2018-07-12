@@ -79,7 +79,8 @@ def pdf_bow(pdfPath, outDIR, pdfFile=None, overwrite=False):
 
     if not os.path.isfile(fileNameOutBow):
         bow.preprocess_text(fileNameOut, fileNameOutBow)
-        return fileNameOutBow
+    
+    return fileNameOutBow
 
 
 def run(input_path, output_dir='./', overwrite=None):

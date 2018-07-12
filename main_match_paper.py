@@ -1,25 +1,37 @@
 import json
-from pdf2bow import pdf2bow
+from pdf2bow import pdf2bow, bow_phrases
 import utils
 from paper_matching import similarity
 import logging
+import pickle
 
 
 def main():
-    # test_document_path = "/Users/nus/Dropbox/NUS/Papers/Gaussian Process Regression Networks.pdf"
-    test_document_path = "/Users/nus/Dropbox/NUS/Papers/Scalable and accurate deep learning with electronic healthrecords.pdf"
+    test_document_path = "/Users/nus/Dropbox/NUS/Papers/Gaussian Process Regression Networks.pdf"
+    # test_document_path = "/Users/nus/Dropbox/NUS/Papers/Scalable and accurate deep learning with electronic healthrecords.pdf"
 
-    # Get tokenized for test file
-    pdf2bow.run(input_path=test_document_path)
+    TOKENS_PHRASE = True  # Toggle whether to detect phrase at tokenization step
+
+    data_json_file = "data_with_phrases.json" if TOKENS_PHRASE else "data.json"
 
     # read data from json training file
-    with open('data.json') as f:
+    with open(data_json_file) as f:
         data = json.load(f)
 
+    bow_file_location = pdf2bow.run(input_path=test_document_path)
     corpus = build_corpus_from_json(researchers_bow=data)
     dictionary, corpus_bow = similarity.build_dictionary(corpus)
 
-    test_data_bow = dictionary.doc2bow(utils.read_file(test_document_path.split("/")[-1].replace("pdf", "bow")).split())
+    if not TOKENS_PHRASE:
+        # Get tokenized for test file
+        test_data_preprocessed = utils.read_file(bow_file_location).split()
+    else:
+        bigram_mod = pickle.load(open("bigram_model.p", "rb"))
+        data_lemmatized, _ = bow_phrases.text_preprocess_with_phrases([utils.read_file(bow_file_location.replace(".bow", ".txt"))], bigram_mod=bigram_mod)
+        test_data_preprocessed = data_lemmatized[0]
+
+    test_data_bow = dictionary.doc2bow(test_data_preprocessed)
+
     logging.info("***********")
     logging.info("***** Paper: %s *****", test_document_path.split("/")[-1])
     logging.info("***********")

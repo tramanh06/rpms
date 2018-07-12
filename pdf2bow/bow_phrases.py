@@ -26,8 +26,8 @@ def sent_to_words(sentences):
 # Define functions for stopwords, bigrams, trigrams and lemmatization
 def remove_stopwords(texts):
     stop_words = stopwords.words('english')
-    # english_words = set(nltk.corpus.words.words())
-    return [[word for word in gensim.utils.simple_preprocess(str(doc), deacc=True) if word not in stop_words] for doc in texts]
+    english_words = set(nltk.corpus.words.words())
+    return [[word for word in gensim.utils.simple_preprocess(str(doc), deacc=True) if word not in stop_words and word in english_words] for doc in texts]
 
 
 def make_bigrams(texts, bigram_mod):
