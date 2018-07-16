@@ -37,11 +37,12 @@ def download_from_arxiv(title, my_api_key, my_cse_id, dirname='./'):
             logging.info("Downloading from arxiv: " + title)
             return arxiv.download(results[0], dirname=dirname, slugify=True)    # When slugify is True, the paper title will be stripped of non-alphanumeric characters before being used as a filename.
         else:
-            logging.info("Paper is not on arxiv, downloading from google: " + title)
-            results = google_custom_search.google_search(title + ' filetype:PDF',
+            google_query = title + ' filetype:PDF'
+            logging.info("Paper is not on arxiv, downloading from google: " + google_query)
+            results = google_custom_search.search_google(google_query,
                                                          my_api_key, my_cse_id, num=10)
             if results:
-                google_custom_search.download_link_from_google(results, outfile)
+                google_custom_search.download_link_from_google(results, outfile, google_query)
 
     else:
         logging.info("Paper has already been downloaded previously. Will skip downloading this file (%s)", title)
@@ -73,8 +74,9 @@ def main():
     title_positive = 'Gaussian Process Decentralized Data Fusion Meets Transfer Learning in Large Scale Distributed Cooperative Perception'  # title must be exact
     title_negative = 'seaPoT RL Selective Exploration Algorithm for Policy Transfer in RL'
     title_ambiguous = 'Knowledge-Driven Interpretation of Multi-View Data in Medicine'
+    title = "Autonomous Driving among Many Pedestrians   Models and Algorithms."
 
-    download_from_arxiv(title_ambiguous, my_api_key, my_cse_id)
+    download_from_arxiv(title, my_api_key, my_cse_id)
 
 if __name__ == '__main__':
     main()
@@ -87,3 +89,5 @@ if __name__ == '__main__':
 #                       "max_results": 10})
 # print url_args
 # Working URL: http://export.arxiv.org/api/query?search_query=ti%3A%22Decentralized+High+Dimensional+Bayesian+Optimization+with+Factor+Graphs%22&max_results=10&start=0&id_list=
+
+# http://export.arxiv.org/api/query?search_query=ti%3A%22Autonomous+Driving+among+Many+Pedestrians+++Models+and+Algorithms%22&max_results=10&start=0&id_list=

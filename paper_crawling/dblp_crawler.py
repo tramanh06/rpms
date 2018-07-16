@@ -24,7 +24,7 @@ def query_dblp_by_author(author):
 
 def query_dblp_for_author_freetext_name(author_name):
     authors = dblp.search(author_name)
-    logging.info('Found %s authors for %s:',str(len(authors)), author_name)
+    logging.info('Found %s authors for %s:', str(len(authors)), author_name)
     logging.info(get_list_of_authors(authors))
 
     if len(authors) > 2:
