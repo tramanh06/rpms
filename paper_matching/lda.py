@@ -7,6 +7,8 @@ from nltk.corpus import stopwords
 import spacy
 import gensim.corpora as corpora
 
+
+' Reference: https://www.machinelearningplus.com/nlp/topic-modeling-gensim-python/ '
 def lda_unigram():
     # LDA code
     dictionary = gensim.corpora.Dictionary.load(path.join(path.dirname(__file__), '../dictionary.dict'))
@@ -46,24 +48,9 @@ def lemmatization(texts, allowed_postags=['NOUN', 'ADJ', 'VERB', 'ADV']):
     return texts_out
 
 
-def bigram():
-    file_location_1 = "/Users/nus/git/tpms/paper_matching/A_Unifying_Framework_of_Anytime_Sparse_Gaussian_Process_Regression_Models_with_Stochastic_Variational_Inference_for_Big_Data.txt"
-    file_location_2 = "/Users/nus/git/tpms/paper_matching/Learning_Dynamic_Robot_to_Human_Object_Handover_from_Human_Feedback.txt"
-    file_location_3 = "/Users/nus/git/tpms/paper_matching/Gaussian_Process_Based_Decentralized_Data_Fusion_and_Active_Sensing_for_Mobility_on_Demand_System.txt"
-    data = []
-    with io.open(file_location_1, 'r', encoding='utf-8', errors='ignore') as f:
-        data.append(f.read())
-    with io.open(file_location_2, 'r', encoding='utf-8', errors='ignore') as f:
-        data.append(f.read())
-    with io.open(file_location_3, 'r', encoding='utf-8', errors='ignore') as f:
-        data.append(f.read())
-
-    # print data
-    # split document into sentences
-    sentences = data
-
+def bigram(data):
     # Split sentences into words
-    data_words = list(sent_to_words(sentences))
+    data_words = list(sent_to_words(data))
     # print 'datawords'
     # print data_words[:1]
 
@@ -117,7 +104,17 @@ def bigram():
 
 
 def main():
-    bigram()
+    file_location_1 = "/Users/nus/git/tpms/paper_matching/A_Unifying_Framework_of_Anytime_Sparse_Gaussian_Process_Regression_Models_with_Stochastic_Variational_Inference_for_Big_Data.txt"
+    file_location_2 = "/Users/nus/git/tpms/paper_matching/Learning_Dynamic_Robot_to_Human_Object_Handover_from_Human_Feedback.txt"
+    file_location_3 = "/Users/nus/git/tpms/paper_matching/Gaussian_Process_Based_Decentralized_Data_Fusion_and_Active_Sensing_for_Mobility_on_Demand_System.txt"
+    data = []
+    with io.open(file_location_1, 'r', encoding='utf-8', errors='ignore') as f:
+        data.append(f.read())
+    with io.open(file_location_2, 'r', encoding='utf-8', errors='ignore') as f:
+        data.append(f.read())
+    with io.open(file_location_3, 'r', encoding='utf-8', errors='ignore') as f:
+        data.append(f.read())
+    bigram(data)
     
 
 if __name__ == '__main__':

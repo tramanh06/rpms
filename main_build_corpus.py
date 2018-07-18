@@ -35,6 +35,7 @@ if __name__ == '__main__':
     # researchers = ["Leong Tze Yun", "Bryan Low", "Harold Soh", "David Hsu", "Kuldeep S. Meel", "Lee Wee Sun"]
     papers_DIR = "papers/"
     bow_DIR = "bow/"
+    master_output_file = 'data.json'
 
     researchers_to_bows = []
     for o in os.listdir(papers_DIR):
@@ -53,7 +54,7 @@ if __name__ == '__main__':
             researchers_to_bows.append({'researcher': o, 'bow_content': all_texts})
 
     try:
-        with open('data.json') as f:
+        with open(master_output_file) as f:
             data = json.load(f)
     except IOError:  # When data.json is not available
         data = []
@@ -64,5 +65,5 @@ if __name__ == '__main__':
     data.extend(filter(lambda x: x["researcher"] not in existing_researchers, researchers_to_bows))
 
     # write data to json file
-    with open("data.json", 'wb') as outfile:
+    with open(master_output_file, 'wb') as outfile:
         json.dump(data, outfile)
