@@ -1,6 +1,9 @@
 import re
 import nltk
 from nltk.stem.snowball import SnowballStemmer
+import gensim
+import spacy
+import bow_service
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import utils
@@ -54,9 +57,20 @@ def preprocess_text(inputfile, outputfile):
     utils.write_to_file(outputfile, stemmed)
 
 
+def preprocess_gensim(inputfile, outputfile):
+    data = utils.read_file(inputfile)
+    data_words = gensim.utils.simple_preprocess(data, deacc=True)
+    data_words_nostop = bow_service.remove_stopwords([data_words])
+    data_lemmatized = bow_service.lemmatization(data_words_nostop, allowed_postags=['NOUN', 'ADJ', 'VERB', 'ADV'])
+    # print ' '.join(data_lemmatized[0])
+    utils.write_to_file(outputfile, ' '.join(data_lemmatized[0]))
+
+
 if __name__ == '__main__':
     from os import path
     output_dir = path.join(path.dirname(__file__), 'output/')
     inputfile = output_dir + "paper.txt"
-    outputfile = output_dir + "paper.bow"
-    preprocess_text(inputfile, outputfile)
+    # outputfile = output_dir + "paper.bow"
+    outputfile = output_dir + "paper_gensim.bow"
+
+    preprocess_gensim(inputfile, outputfile)

@@ -7,8 +7,8 @@ import pickle
 
 
 def main():
-    # test_document_path = "/Users/nus/Dropbox/NUS/Papers/Gaussian Process Regression Networks.pdf"
-    test_document_path = "/Users/nus/Dropbox/NUS/Papers/Scalable and accurate deep learning with electronic healthrecords.pdf"
+    test_document_path = "/Users/nus/Dropbox/NUS/Papers/Gaussian Process Regression Networks.pdf"
+    # test_document_path = "/Users/nus/Dropbox/NUS/Papers/Scalable and accurate deep learning with electronic healthrecords.pdf"
 
     TOKENS_PHRASE = False  # Toggle whether to detect phrase at tokenization step
 
@@ -22,8 +22,8 @@ def main():
     bow_file_location = pdf2bow.run(input_path=test_document_path)
     corpus = build_corpus_from_json(researchers_bow=data)
     dictionary, corpus_bow = similarity.build_dictionary(corpus)
-    dictionary.save(fname_or_handle=dictionary_file)
-    corpora.MmCorpus.serialize("corpus.mm", corpus_bow)
+    # dictionary.save(fname_or_handle=dictionary_file)
+    # corpora.MmCorpus.serialize("corpus.mm", corpus_bow)
 
     if not TOKENS_PHRASE:
         # Get tokenized for test file

@@ -77,8 +77,8 @@ def pdf_bow(pdfPath, outDIR, pdfFile=None, overwrite=False):
         print 'problem with pdftotext, returning'
         return
 
-    if not os.path.isfile(fileNameOutBow):
-        bow.preprocess_text(fileNameOut, fileNameOutBow)
+    # if not os.path.isfile(fileNameOutBow):
+    bow.preprocess_gensim(fileNameOut, fileNameOutBow)
     
     return fileNameOutBow
 

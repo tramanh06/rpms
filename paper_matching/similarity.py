@@ -23,8 +23,6 @@ def build_dictionary(corpus):
     # BOW for each document
     dictionary = corpora.Dictionary(corpus)
     doc_term_matrix = [dictionary.doc2bow(t) for t in corpus]
-    dictionary.save(fname_or_handle="dictionary.dict")
-    corpora.MmCorpus.serialize("corpus.mm", doc_term_matrix)
     return dictionary, doc_term_matrix
 
 
