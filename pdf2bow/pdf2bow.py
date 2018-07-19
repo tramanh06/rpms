@@ -9,9 +9,10 @@ from sanitize import sanitize
 from ispdf import ispdf
 import bow
 import utils
+import configparser
 
 sys.path += ['.']
-
+parentDirectory = os.path.dirname(__file__)
 
 #####################################################################
 # PURPOSE:
@@ -77,8 +78,16 @@ def pdf_bow(pdfPath, outDIR, pdfFile=None, overwrite=False):
         print 'problem with pdftotext, returning'
         return
 
-    # if not os.path.isfile(fileNameOutBow):
-    bow.preprocess_gensim(fileNameOut, fileNameOutBow)
+    config = configparser.ConfigParser()
+    config.read(os.path.join(parentDirectory, '..', 'config.ini'))
+    RESET_BOW = config['PREPROCESSING'].getboolean('RESET_BOW')
+    MANUAL_TOKENIZATION = config['PREPROCESSING'].getboolean('MANUAL_TOKENIZATION')
+
+    if not os.path.isfile(fileNameOutBow) or RESET_BOW:
+        if MANUAL_TOKENIZATION:
+            bow.preprocess_text(fileNameOut, fileNameOutBow)
+        else:
+            bow.preprocess_gensim(fileNameOut, fileNameOutBow)
     
     return fileNameOutBow
 

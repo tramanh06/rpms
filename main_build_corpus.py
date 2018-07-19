@@ -19,7 +19,7 @@ import utils
 from paper_crawling import arxiv_crawler, dblp_crawler
 from paper_matching import similarity
 from pdf2bow import pdf2bow
-
+import configparser
 
 def prepare_bow_content(pdf_DIR, bow_DIR):
     # Run BOW
@@ -36,6 +36,8 @@ if __name__ == '__main__':
     papers_DIR = "papers/"
     bow_DIR = "bow/"
     master_output_file = 'data.json'
+    config = configparser.ConfigParser()
+    config.read('config.ini')
 
     researchers_to_bows = []
     for o in os.listdir(papers_DIR):
@@ -44,7 +46,7 @@ if __name__ == '__main__':
             bow_sub_DIR = os.path.join(bow_DIR, o, "")
             all_texts = prepare_bow_content(papers_sub_dir, bow_sub_DIR)
 
-            # Persist to intermediate file 
+            # Persist to intermediate file under subfolder
             outfile_location = os.path.join(bow_sub_DIR, "_.json")
             content = {o: all_texts}
             with open(outfile_location, 'wb') as f:
@@ -53,9 +55,14 @@ if __name__ == '__main__':
             # Add to master list
             researchers_to_bows.append({'researcher': o, 'bow_content': all_texts})
 
+    RESET_BOW = config['PREPROCESSING'].getboolean('RESET_BOW')
+
     try:
-        with open(master_output_file) as f:
-            data = json.load(f)
+        if RESET_BOW:
+            data = []
+        else:
+            with open(master_output_file) as f:
+                data = json.load(f)
     except IOError:  # When data.json is not available
         data = []
 

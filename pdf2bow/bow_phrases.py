@@ -35,8 +35,8 @@ def text_preprocess_with_phrases(docs, bigram_mod=None):
     # Split sentences into words
     docs = list(bow_service.sent_to_words(docs))
 
-    print "First document: " 
-    print docs[:1]
+    # print "First document: " 
+    # print docs[:1]
 
     if not bigram_mod:
         # Create bigram phrases when necessary
@@ -52,6 +52,6 @@ def text_preprocess_with_phrases(docs, bigram_mod=None):
     # Do lemmatization keeping only noun, adj, vb, adv
     data_lemmatized = bow_service.lemmatization(data_words_bigrams, allowed_postags=['NOUN', 'ADJ', 'VERB', 'ADV'])
 
-    print(data_lemmatized[:1])
+    # print(data_lemmatized[:1])
 
     return data_lemmatized, bigram_mod
