@@ -1,6 +1,7 @@
 import os
 import io
-
+import glob
+import json
 
 def read_file(file_location):
     ' Read text file, concatenate all lines into 1 '
@@ -14,6 +15,10 @@ def write_to_file(file_location, data):
         f.write(data)
 
 
+def write_to_json_file(file_location, data):
+    with open(file_location, 'wb') as f:
+        json.dump(data, f)
+
 def is_folder_exists_create_otherwise(outDIR):
     # Check if output folder has been created. Create otherwise
     try:
@@ -21,3 +26,8 @@ def is_folder_exists_create_otherwise(outDIR):
     except OSError:
         if not os.path.isdir(outDIR):
             raise
+
+
+def extract_all_files_with_pattern(directory, pattern):
+    all_txt = [read_file(filename) for filename in glob.glob(directory + pattern)]
+    return all_txt
