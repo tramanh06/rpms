@@ -10,6 +10,12 @@ def read_file(file_location):
     return data
 
 
+def read_json_file(file_location):
+    with open(file_location) as f:
+        data = json.load(f)
+    return data
+
+
 def write_to_file(file_location, data):
     with open(file_location, 'w') as f:
         f.write(data)

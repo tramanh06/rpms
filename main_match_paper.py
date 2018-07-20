@@ -19,8 +19,7 @@ def main():
     data_json_file = "data_with_phrases.json" if TOKENS_PHRASE else "data.json"
 
     # read data from json training file
-    with open(data_json_file) as f:
-        data = json.load(f)
+    data = utils.read_json_file(data_json_file)
 
     bow_file_location = pdf2bow.run(input_path=test_document_path)
     corpus = build_corpus_from_json(researchers_bow=data)

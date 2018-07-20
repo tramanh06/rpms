@@ -1,10 +1,11 @@
 import json
 import gensim
+import utils
 
+# Train LDA
 json_file_location = "papers.json"
 
-with open(json_file_location) as f:
-    data = json.load(f)
+data = utils.read_json_file(json_file_location)
 
 data_words = [x.split() for x in data]
 
@@ -28,8 +29,7 @@ print(lda_model.print_topics())
 
 # Inference 
 papers_by_author_location = "data.json"
-with open(papers_by_author_location) as f:
-    data = json.load(f)
+data = utils.read_json_file(papers_by_author_location)
 data_words = [x["bow_content"].split() for x in data]
 
 termdoc_vector = [dictionary.doc2bow(text) for text in data_words]

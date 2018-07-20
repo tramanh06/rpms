@@ -64,8 +64,7 @@ if __name__ == '__main__':
         if RESET_BOW:
             data = []
         else:
-            with open(master_output_file) as f:
-                data = json.load(f)
+            data = utils.read_json_file(master_output_file)
     except IOError:  # When data.json is not available
         data = []
 
