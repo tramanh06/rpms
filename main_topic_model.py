@@ -2,39 +2,53 @@ import json
 import gensim
 import utils
 
+
 # Train LDA
-json_file_location = "papers.json"
+class TopicModel():
 
-data = utils.read_json_file(json_file_location)
+    def __init__(self, source_file="papers.json", prune_dictionary=False):
+        data = utils.read_json_file(source_file)
 
-data_words = [x.split() for x in data]
+        data_words = [x.split() for x in data]
 
-dictionary = gensim.corpora.Dictionary(data_words)
-corpus = [dictionary.doc2bow(text) for text in data_words]
+        self.dictionary = gensim.corpora.Dictionary(data_words)
+        
+        if prune_dictionary:
+            self.dictionary.filter_extremes(no_below=0, no_above=0.95, keep_n=None)
+
+        corpus = [self.dictionary.doc2bow(text) for text in data_words]
+
+        self.lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus,
+                                                         id2word=self.dictionary,
+                                                         num_topics=5, 
+                                                         random_state=100,
+                                                         update_every=1,
+                                                         chunksize=100,
+                                                         passes=10,
+                                                         alpha='symmetric',
+                                                         per_word_topics=False)
+            
+        # Print the Keyword in the 10 topics
+        print(self.lda_model.print_topics())
+
+    # Inference
+    def inference_topic(self, file_location="data.json"):
+        data = utils.read_json_file(file_location)
+        data_words = [x["bow_content"].split() for x in data]
+
+        termdoc_vector = [self.dictionary.doc2bow(text) for text in data_words]
+
+        doc_lda = self.lda_model[termdoc_vector]
+
+        print doc_lda
+        for topic in doc_lda:
+            print(topic)
 
 
-lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus,
-                                            id2word=dictionary,
-                                            num_topics=5, 
-                                            random_state=100,
-                                            update_every=1,
-                                            chunksize=100,
-                                            passes=10,
-                                            alpha='symmetric',
-                                            per_word_topics=False)
-    
-# Print the Keyword in the 10 topics
-print(lda_model.print_topics())
+def main():
+    topicModel = TopicModel(source_file="papers_with_phrases.json", prune_dictionary=False)
+    topicModel.inference_topic(file_location="data_with_phrases.json")
 
 
-# Inference 
-papers_by_author_location = "data.json"
-data = utils.read_json_file(papers_by_author_location)
-data_words = [x["bow_content"].split() for x in data]
-
-termdoc_vector = [dictionary.doc2bow(text) for text in data_words]
-
-doc_lda = lda_model[termdoc_vector]
-print doc_lda
-for topic in doc_lda:
-    print(topic)
+if __name__ == '__main__':
+    main()
