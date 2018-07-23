@@ -10,6 +10,7 @@ from ispdf import ispdf
 import bow
 import utils
 import configparser
+import logging
 
 sys.path += ['.']
 parentDirectory = os.path.dirname(__file__)
@@ -42,7 +43,7 @@ def pdf_bow(pdfPath, outDIR, pdfFile=None, overwrite=False):
 
     """
 
-    print '- %s:' % pdfPath,
+    logging.info('- %s:' % pdfPath)
 
     # Check if out folder exists, create otherwise
     utils.is_folder_exists_create_otherwise(outDIR)
@@ -52,7 +53,7 @@ def pdf_bow(pdfPath, outDIR, pdfFile=None, overwrite=False):
             try:
                 os.mkdir(outDIR)
             except OSError, e:
-                print 'ERROR: Problem creating directory...'
+                logging.error('Problem creating directory...')
                 raise
         pdfFile = os.path.basename(pdfPath)
         if re.search('\.[a-zA-Z0-9]{1,4}', pdfFile):
@@ -68,14 +69,14 @@ def pdf_bow(pdfPath, outDIR, pdfFile=None, overwrite=False):
 
     # get text
     if not os.path.isfile(fileNameOut) or os.path.getsize(fileNameOut) == 0 or overwrite:
-        print 'converting (%s %s -> %s)' % (pdf2textCMD, pdfPath, fileNameOut)
+        logging.info('converting (%s %s -> %s)' % (pdf2textCMD, pdfPath, fileNameOut))
         os.system(""" %s "%s" "%s" """ % (pdf2textCMD, pdfPath, fileNameOut))
     else:
-        print 'not converting since output already exists'
+        logging.info('not converting since output already exists')
 
     if not os.path.isfile(fileNameOut):
         os.system('file ' + fileNameOut)
-        print 'problem with pdftotext, returning'
+        logging.error('problem with pdftotext, returning')
         return
 
     config = configparser.ConfigParser()
@@ -106,7 +107,7 @@ def run(input_path, output_dir='./', overwrite=None):
     """
 
     if os.path.isdir(input_path):
-        print 'Parsing all pdfs in the directory', input_path
+        logging.info('Parsing all pdfs in the directory %s', input_path)
         paths = []
         for f in glob(input_path + '/*'):
             # Only process pdf files
@@ -114,10 +115,10 @@ def run(input_path, output_dir='./', overwrite=None):
                 bow_filename = pdf_bow(f, output_dir, overwrite=overwrite)
                 paths.append(bow_filename)
             else:
-                print 'not a pdf', f
+                logging.info('not a pdf %s', f)
         return paths
     else:
-        print 'Path %s not directory' % input_path
+        logging.info('Path %s not directory' % input_path)
         bow_filename = pdf_bow(input_path, output_dir, overwrite=overwrite)
         return bow_filename
 

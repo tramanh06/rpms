@@ -4,6 +4,7 @@ import utils
 import json
 from pdf2bow import bow_phrases
 import pickle
+import logging
 
 
 def write_bow_text_to_individual_folder(researchers_to_bow, base_folder):
@@ -23,15 +24,14 @@ if __name__ == '__main__':
     # Aggregate all text papers from sub-folder
     for o in os.listdir(data_directory):
         bow_sub_dir = os.path.join(data_directory, o, "")
-        print "subdir = " + bow_sub_dir
+        logging.info("subdir = %s", bow_sub_dir)
         if os.path.isdir(bow_sub_dir):
             aggregated_texts = utils.extract_all_files_with_pattern(bow_sub_dir, '*.txt')
             researchers_to_bow.append({'researcher': o, 'bow_content': aggregated_texts})
 
     # Store number of author's publications in a list, e.g. [10, 8, 11, ..]. Needed for later
     num_publications = [len(x['bow_content']) for x in researchers_to_bow]
-    print "List of number of publications: "
-    print num_publications
+    logging.info("List of number of publications: %s", num_publications)
     
     stream_of_docs = [paper for x in researchers_to_bow for paper in x["bow_content"]]  # Flatten a list of list
     tokenized_docs, bigram_model = bow_phrases.text_preprocess_with_phrases(stream_of_docs)
