@@ -15,7 +15,7 @@ class TopicModel():
         self.dictionary = gensim.corpora.Dictionary(data_words)
 
         if prune_dictionary:
-            self.dictionary.filter_extremes(no_below=0, no_above=0.95, keep_n=None)
+            self.dictionary.filter_extremes(no_below=0, no_above=0.90, keep_n=None)
 
         corpus = [self.dictionary.doc2bow(text) for text in data_words]
 
@@ -48,9 +48,12 @@ class TopicModel():
 
 
 def main():
-    topicModel = TopicModel(source_file="papers_with_phrases.json", prune_dictionary=True)
-    topicModel.inference_topic(file_location="data_with_phrases.json")
+    topicModel = TopicModel(source_file="papers.json", prune_dictionary=True, num_topics=50)
+    topicModel.inference_topic(file_location="data.json")
 
 
 if __name__ == '__main__':
+    logging.getLogger().setLevel(logging.INFO)
+    logging.getLogger("gensim").setLevel(logging.ERROR)
+
     main()
