@@ -20,7 +20,7 @@ utils.is_folder_exists_create_otherwise(dataset_DIR)
 
 index = 0
 papers_collection = []
-author_papers_dict = []
+author_papers_dict = {}
 
 for _dir in glob.glob(papers_DIR + '*' + os.path.sep):
     author = get_path_leave(_dir)
@@ -37,14 +37,15 @@ for _dir in glob.glob(papers_DIR + '*' + os.path.sep):
             fileNameOut = dataset_DIR + "p" + str(index) + ".txt"
             logging.info('converting (%s %s -> %s)' % ("pdftotext", pdfPath, fileNameOut))
             os.system(""" %s "%s" "%s" """ % ("pdftotext", pdfPath, fileNameOut))
+            papers.append(index)
             index += 1
-            paper_id = index
         else:
             paper_id = papers_collection.index(paper_title)
+            papers.append(paper_id)
             print "***** Paper "+paper_title+" already exists. Paperid="+ str(paper_id)
-        papers.append(paper_id)
+        
 
-    author_papers_dict.append({"author": author, "papers": papers})
+    author_papers_dict[author]= papers
 
 utils.write_to_json_file("dataset/authors.json", author_papers_dict)
 
