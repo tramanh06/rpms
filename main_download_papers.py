@@ -44,7 +44,10 @@ def get_files_count(DIR):
 
 def main():
     # researchers = ["Leong Tze Yun", "Bryan Low", "Harold Soh", "David Hsu", "Kuldeep S. Meel", "Lee Wee Sun"]
-    researchers = ["Harold Soh"]
+    # researchers = ["Harold Soh", "David Hsu", "Kuldeep S. Meel", "Lee Wee Sun"]
+    # researchers = ["Harold Soh"]
+    researchers = utils.read_file(file_location="researchers.txt", sep="|").split("|")
+    researchers = [name.title() for name in researchers]  # Convert "David HSU" to "David Hsu"
 
     for research in researchers:
         download_papers(research)

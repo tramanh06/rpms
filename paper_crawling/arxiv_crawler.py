@@ -15,6 +15,17 @@ def get_filename(dirname, title):
     return dirname + arxiv.to_slug(title) + ".pdf"
 
 
+def paper_available_on_arxiv(results):
+    return len(results)
+
+
+def download_from_google(query, my_api_key, my_cse_id, outfile):
+    results = google_custom_search.search_google(query,
+                                                 my_api_key, my_cse_id, num=10)
+    if results:
+        google_custom_search.download_link_from_google(results, outfile, query)
+
+
 def download_from_arxiv(title, my_api_key, my_cse_id, dirname='./'):
     """Download arxiv paper from the title
 
@@ -33,17 +44,13 @@ def download_from_arxiv(title, my_api_key, my_cse_id, dirname='./'):
     logging.debug(results)
     outfile = get_filename(dirname, title)
     if not os.path.isfile(outfile):
-        if len(results):
+        if paper_available_on_arxiv(results):
             logging.info("Downloading from arxiv: " + title)
             return arxiv.download(results[0], dirname=dirname, slugify=True)    # When slugify is True, the paper title will be stripped of non-alphanumeric characters before being used as a filename.
         else:
             google_query = title + ' filetype:PDF'
             logging.info("Paper is not on arxiv, downloading from google: " + google_query)
-            results = google_custom_search.search_google(google_query,
-                                                         my_api_key, my_cse_id, num=10)
-            if results:
-                google_custom_search.download_link_from_google(results, outfile, google_query)
-
+            download_from_google(google_query, my_api_key, my_cse_id, outfile)
     else:
         logging.info("Paper has already been downloaded previously. Will skip downloading this file (%s)", title)
         return None

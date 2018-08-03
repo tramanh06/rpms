@@ -5,7 +5,8 @@ import os
 import configparser
 import logging
 from PyPDF2 import PdfFileReader
-
+import requests
+import socket
 
 def search_google(search_term, api_key, cse_id, **kwargs):
     """Search query from google API.
@@ -38,7 +39,7 @@ def get_num_pages(pdf_path):
 
 
 def is_valid_pdf(urllib_result, filepath):
-    return urllib_result[1]['content-type'] == 'application/pdf' and 1 < get_num_pages(filepath) < 50
+    return urllib_result and urllib_result[1]['content-type'] == 'application/pdf' and 1 < get_num_pages(filepath) < 50
 
 
 def download_link_from_google(results, outfile, search_terms):
@@ -53,13 +54,18 @@ def download_link_from_google(results, outfile, search_terms):
         Boolean. True if file can be found and downloaded. False otherwise.
         
     """
-    # results = filter(lambda x: 'ieeexplore' not in x['link'], results)  # Remove ieeexplore results
+
+    socket.setdefaulttimeout(30)
 
     for result in results:
         pdf_url = result['link']
         logging.info("Downloading paper %s from url: %s", outfile, pdf_url)
-        result = urllib.urlretrieve(pdf_url, outfile)
-        if is_valid_pdf(result, outfile):
+        try:
+            urllib_result = urllib.urlretrieve(pdf_url, outfile)
+        except IOError as e:
+            logging.warn("File takes too long to download. Timeout...")
+            urllib_result = None
+        if is_valid_pdf(urllib_result, outfile):
             return True
             break
 
@@ -83,7 +89,7 @@ def main():
     # "Scalable Decision-Theoretic Coordination and Control for Real-time Active Multi-Camera Surveillance" filetype:pdf
     # Supermodular mean squared error minimization for sensor scheduling in optimal Kalman Filtering -- still can't retrieve the nus link for this
     # "Act to See and See to Act POMDP planning for objects search in clutter" filetype:pdf
-    search_query = '"iCharibot   Design and Field Trials of a Fundraising Robot."' + ' filetype:PDF'
+    search_query = '"Perceptual evaluation of singing quality."' + ' filetype:PDF'
     results = search_google(
         search_query,
         my_api_key, my_cse_id)

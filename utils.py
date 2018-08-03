@@ -3,10 +3,10 @@ import io
 import glob
 import json
 
-def read_file(file_location):
+def read_file(file_location, sep=" "):
     ' Read text file, concatenate all lines into 1 '
     with io.open(file_location, 'r', encoding='utf-8', errors='ignore') as f:
-        data = f.read().replace('\n', " ")
+        data = f.read().replace('\n', sep)
     return data
 
 
