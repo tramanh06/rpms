@@ -1,3 +1,4 @@
+# coding: utf-8
 import arxiv
 from urllib import urlencode
 import logging
@@ -26,6 +27,10 @@ def download_from_google(query, my_api_key, my_cse_id, outfile):
         google_custom_search.download_link_from_google(results, outfile, query)
 
 
+def remove_non_ascii(str):
+    return ''.join([i if ord(i) < 128 else '' for i in str])
+
+
 def download_from_arxiv(title, my_api_key, my_cse_id, dirname='./'):
     """Download arxiv paper from the title
 
@@ -38,6 +43,8 @@ def download_from_arxiv(title, my_api_key, my_cse_id, dirname='./'):
 
     """
     title = '"' + title.replace('-', ' ') + '"'  # Put quote for exact search
+    title = remove_non_ascii(title)
+
     title_prepended = 'ti:' + title
     results = arxiv.query(title_prepended)
 
@@ -78,12 +85,13 @@ def main():
     my_cse_id = config['GOOGLE']['CSE_ID']
     ###########################################
 
-    title_positive = 'Gaussian Process Decentralized Data Fusion Meets Transfer Learning in Large Scale Distributed Cooperative Perception'  # title must be exact
-    title_negative = 'seaPoT RL Selective Exploration Algorithm for Policy Transfer in RL'
-    title_ambiguous = 'Knowledge-Driven Interpretation of Multi-View Data in Medicine'
-    title = "Autonomous Driving among Many Pedestrians   Models and Algorithms."
+    # title_positive = 'Gaussian Process Decentralized Data Fusion Meets Transfer Learning in Large Scale Distributed Cooperative Perception'  # title must be exact
+    # title_negative = 'seaPoT RL Selective Exploration Algorithm for Policy Transfer in RL'
+    # title_ambiguous = 'Knowledge-Driven Interpretation of Multi-View Data in Medicine'
+    # title = "Autonomous Driving among Many Pedestrians   Models and Algorithms."
+    title_nonascii = "Artificial Potential-Based AdaptiveH∞ Synchronized Tracking Control for Accommodation Vessel.(IEEE Trans. Industrial Electronics)"
 
-    download_from_arxiv(title, my_api_key, my_cse_id)
+    download_from_arxiv(title_nonascii, my_api_key, my_cse_id)
 
 if __name__ == '__main__':
     main()

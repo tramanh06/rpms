@@ -16,6 +16,7 @@ __pycache__/
 *.p
 notebooks/nipstxt
 *.atmodel*
+*.tgz
 
 
 # C extensions
