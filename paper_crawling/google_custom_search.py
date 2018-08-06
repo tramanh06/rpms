@@ -70,7 +70,13 @@ def download_link_from_google(results, outfile, search_terms):
             break
 
     logging.error("Cannot find valid pdf file on Google for %s", search_terms)
-    os.remove(outfile)
+    try:
+        os.remove(outfile)
+    except OSError as exc:
+        if exc.errno == 63:
+            logging.error("File name is too long. Ignoring this file.")
+        else:
+            raise
 
     return False
 
