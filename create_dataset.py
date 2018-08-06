@@ -3,6 +3,7 @@ import glob
 import utils
 import logging
 import utils
+import subprocess
 
 def is_paper_seen(papers_index, paper):
     return paper in papers_index
@@ -35,10 +36,16 @@ for author_dir in glob.glob(papers_DIR + '*' + os.path.sep):
             pdfPath = paper_filename
             print "pdfPath = " + pdfPath
             fileNameOut = dataset_DIR + "p" + str(index) + ".txt"
-            logging.info('converting (%s %s -> %s)' % ("pdftotext", pdfPath, fileNameOut))
-            os.system(""" %s "%s" "%s" """ % ("pdftotext", pdfPath, fileNameOut))
-            papers_id.append(index)
-            index += 1
+            print 'converting (%s %s -> %s)' % ("pdftotext", pdfPath, fileNameOut)
+            try:
+                subprocess.check_call(["pdftotext", pdfPath, fileNameOut])
+                papers_id.append(index)
+                index += 1
+                # os.system(""" %s "%s" "%s" """ % ("pdftotext", pdfPath, fileNameOut))
+            except subprocess.CalledProcessError:
+                logging.error("Syntax Error: Couldn't parse pdf file. PDF: %s", paper_title)
+                # papers_id.remove(index)
+                # index -= 1
         else:
             paper_id = papers_collection.index(paper_title)
             papers_id.append(paper_id)
