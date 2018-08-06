@@ -4,9 +4,11 @@ import urllib
 import os
 import configparser
 import logging
+import PyPDF2
 from PyPDF2 import PdfFileReader
 import requests
 import socket
+import ssl 
 
 def search_google(search_term, api_key, cse_id, **kwargs):
     """Search query from google API.
@@ -33,7 +35,10 @@ def search_google(search_term, api_key, cse_id, **kwargs):
 
 def get_num_pages(pdf_path):
     with open(pdf_path, 'rb') as pdf:
-        num_pages = PdfFileReader(pdf).getNumPages()
+        try:
+            num_pages = PyPDF2.PdfFileReader(pdf).getNumPages()
+        except PyPDF2.utils.PdfReadError:
+            num_pages = float("inf")  # Arbitrarily large number
     
     return num_pages
 
@@ -61,7 +66,7 @@ def download_link_from_google(results, outfile, search_terms):
         pdf_url = result['link']
         logging.info("Downloading paper %s from url: %s", outfile, pdf_url)
         try:
-            urllib_result = urllib.urlretrieve(pdf_url, outfile)
+            urllib_result = urllib.urlretrieve(pdf_url, outfile, context=ssl._create_unverified_context())
         except IOError as e:
             logging.warn("File takes too long to download. Timeout...")
             urllib_result = None
