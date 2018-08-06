@@ -22,30 +22,29 @@ index = 0
 papers_collection = []
 author_papers_dict = {}
 
-for _dir in glob.glob(papers_DIR + '*' + os.path.sep):
-    author = get_path_leave(_dir)
-    papers = []
+for author_dir in glob.glob(papers_DIR + '*' + os.path.sep):
+    author = get_path_leave(author_dir)
+    papers_id = []
     print 'author= ' + author
 
-    for paper_dir in glob.glob(_dir + '*.pdf'):
-        paper_title = os.path.basename(paper_dir).replace(".pdf", "")
+    for paper_filename in glob.glob(author_dir + '*.pdf'):
+        paper_title = os.path.basename(paper_filename).replace(".pdf", "")
         if not is_paper_seen(papers_collection, paper_title):
             papers_collection.append(paper_title)
 
-            pdfPath = paper_dir
+            pdfPath = paper_filename
             print "pdfPath = " + pdfPath
             fileNameOut = dataset_DIR + "p" + str(index) + ".txt"
             logging.info('converting (%s %s -> %s)' % ("pdftotext", pdfPath, fileNameOut))
             os.system(""" %s "%s" "%s" """ % ("pdftotext", pdfPath, fileNameOut))
-            papers.append(index)
+            papers_id.append(index)
             index += 1
         else:
             paper_id = papers_collection.index(paper_title)
-            papers.append(paper_id)
-            print "***** Paper "+paper_title+" already exists. Paperid="+ str(paper_id)
+            papers_id.append(paper_id)
+            print "***** Paper " + paper_title + " already exists. Paperid=" + str(paper_id)
         
-
-    author_papers_dict[author]= papers
+    author_papers_dict[author] = papers_id
 
 utils.write_to_json_file("dataset/authors.json", author_papers_dict)
 

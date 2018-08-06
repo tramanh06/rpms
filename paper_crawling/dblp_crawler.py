@@ -48,7 +48,8 @@ def print_publication_list(pub_dict):
         logging.info(" ************* ")
         logging.info(" List of publications")
         for pub in publications:
-            logging.info(pub['title'] + "(" + pub['venue'] + ")")
+
+            logging.info(pub['title'] + "(" + str(pub['venue']) + ")")
 
 
 def dblp_crawler(author_name):
