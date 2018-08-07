@@ -4,6 +4,7 @@ import utils
 import logging
 import utils
 import subprocess
+import shutil
 
 def is_paper_seen(papers_index, paper):
     return paper in papers_index
@@ -13,10 +14,18 @@ def get_path_leave(path):
     head, tail = os.path.split(path)
     return tail or os.path.basename(head)
 
+def remove_folder(dir):
+    try:
+        shutil.rmtree(dir)
+    except OSError as e:
+        print ("Error: %s - %s." % (e.filename, e.strerror))
+
 
 papers_DIR = os.path.join(os.path.dirname(__file__), "papers/")
 dataset_DIR = os.path.join(os.path.dirname(__file__), "dataset/")
 
+
+remove_folder(dataset_DIR)
 utils.is_folder_exists_create_otherwise(dataset_DIR)
 
 index = 0
