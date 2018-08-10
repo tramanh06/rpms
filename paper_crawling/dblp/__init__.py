@@ -58,7 +58,7 @@ class Author(LazyAPIData):
         self.data = data
     
     def __str__(self):
-        return self.name
+        return self.name.encode('utf-8', errors='ignore')
 
 
 def first_or_none(seq):
