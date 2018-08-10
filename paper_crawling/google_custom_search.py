@@ -44,7 +44,10 @@ def get_num_pages(pdf_path):
 
 
 def is_valid_pdf(urllib_result, filepath):
-    return urllib_result and urllib_result[1]['content-type'] == 'application/pdf' and 1 < get_num_pages(filepath) < 50
+    return urllib_result and \
+        'content-type' in urllib_result[1] and \
+        urllib_result[1]['content-type'] == 'application/pdf' and \
+        1 < get_num_pages(filepath) < 50
 
 
 def download_link_from_google(results, outfile, search_terms):
@@ -70,6 +73,7 @@ def download_link_from_google(results, outfile, search_terms):
         except IOError as e:
             logging.warn("File takes too long to download. Timeout...")
             urllib_result = None
+
         if is_valid_pdf(urllib_result, outfile):
             return True
             break
@@ -80,6 +84,8 @@ def download_link_from_google(results, outfile, search_terms):
     except OSError as exc:
         if exc.errno == 63:
             logging.error("File name is too long. Ignoring this file.")
+        if exc.errno == 2:
+            logging.error("File hadn't been created. No need to remove file %s", outfile)
         else:
             raise
 
@@ -100,7 +106,7 @@ def main():
     # "Scalable Decision-Theoretic Coordination and Control for Real-time Active Multi-Camera Surveillance" filetype:pdf
     # Supermodular mean squared error minimization for sensor scheduling in optimal Kalman Filtering -- still can't retrieve the nus link for this
     # "Act to See and See to Act POMDP planning for objects search in clutter" filetype:pdf
-    search_query = '"Perceptual evaluation of singing quality."' + ' filetype:PDF'
+    search_query = '"Multiway analysis of EEG artifacts based on Block Term Decomposition."' + ' filetype:PDF'
     results = search_google(
         search_query,
         my_api_key, my_cse_id)
