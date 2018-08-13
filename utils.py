@@ -37,3 +37,7 @@ def is_folder_exists_create_otherwise(outDIR):
 def extract_all_files_with_pattern(directory, pattern):
     all_txt = [read_file(filename) for filename in glob.glob(directory + pattern)]
     return all_txt
+
+
+def flatten(l):
+    return [item for sublist in l for item in sublist]

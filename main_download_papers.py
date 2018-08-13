@@ -4,7 +4,9 @@ import logging
 from logging.config import fileConfig
 import configparser
 import os
-
+import collections
+import pickle
+import googleapiclient
 
 fileConfig('logging_config.ini')
 logger = logging.getLogger()
@@ -38,20 +40,62 @@ def download_papers(researcher):
         logging.info("Downloaded %s out of %s papers", get_files_count(papers_DIR), len(papers))
 
 
-def get_files_count(DIR):
+def get_files_count(DIR): 
     return len([name for name in os.listdir(DIR) if os.path.isfile(os.path.join(DIR, name))])
+
+
+def get_papers(author_results):
+    papers_list_of_list = author_results.values()
+    publications = utils.flatten(papers_list_of_list)
+    titles = [x['title'] for x in publications]
+    return titles
+
+
+def load_papers_title(researchers):
+    researcher_papers = collections.OrderedDict([(researcher, get_papers(dblp_crawler.dblp_crawler(researcher))) for researcher in researchers])
+    return researcher_papers
+
+
+def auto_download():
+    researcher_papers_location = "researchers_to_papers.p"
+
+    if os.path.isfile(researcher_papers_location):
+        researcher_papers = pickle.load( open( researcher_papers_location, 'rb'))
+    else:
+        researchers = utils.read_file(file_location="researchers.txt", sep="|").split("|")
+        researcher_papers = load_papers_title(researchers)
+
+    for researcher, papers in researcher_papers.items():
+        papers_DIR = os.path.join("papers", researcher.replace(" ", "_"), "")
+        utils.is_folder_exists_create_otherwise(papers_DIR)
+
+        for paper in papers:
+            try:
+                arxiv_crawler.download_from_arxiv(
+                    title=paper,
+                    my_api_key=my_api_key,
+                    my_cse_id=my_cse_id,
+                    dirname=papers_DIR)
+                papers.remove(paper)
+            except googleapiclient.errors.HttpError as e:
+                pickle.dump( researcher_papers, open( researcher_papers_location, "wb" ) )
+                utils.write_to_file("researchers1.txt", "\n".join(researcher_papers.keys()))
+                logging.error(str(e))
+        
+        if len(papers) == 0:
+            del researcher_papers[researcher]
+
 
 
 def main():
     # researchers = ["Leong Tze Yun", "Bryan Low", "Harold Soh", "David Hsu", "Kuldeep S. Meel", "Lee Wee Sun"]
-    # researchers = ["Harold Soh", "David Hsu", "Kuldeep S. Meel", "Lee Wee Sun"]
-    # researchers = ["Stephen Frank"]
-    researchers = utils.read_file(file_location="researchers.txt", sep="|").split("|")
-    researchers = [name.title() for name in researchers]  # Convert "David HSU" to "David Hsu"
+    # researchers = ["Thomas Yeo"]
+    # researchers = utils.read_file(file_location="researchers.txt", sep="|").split("|")
+    # researchers = [name.title() for name in researchers]  # Convert "David HSU" to "David Hsu"
 
-    for researcher in researchers:
-        download_papers(researcher)
-
+    # for researcher in researchers:
+    #     download_papers(researcher)
+    auto_download()
 
 if __name__ == '__main__':
     main()

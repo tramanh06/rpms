@@ -62,6 +62,7 @@ def dblp_crawler(author_name):
         List of dictionary: [{'author': {'publications': 'details'}}]
         
     """
+    author_name = author_name.title()
     authors = query_dblp_for_author_freetext_name(author_name)
     logging.info('List of publications:')
     result = {}
@@ -76,7 +77,7 @@ def dblp_crawler(author_name):
 
 if __name__ == "__main__":
     # author_name = 'Bryan Low'
-    author_name = 'David Hsu'
+    author_name = 'Bo-An'
     crawler_result = dblp_crawler(author_name)
     print_publication_list(crawler_result)
 
