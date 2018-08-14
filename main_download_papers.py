@@ -63,25 +63,25 @@ def auto_download():
         researcher_papers = pickle.load( open( researcher_papers_location, 'rb'))
     else:
         researchers = utils.read_file(file_location="researchers.txt", sep="|").split("|")
+        researchers = [name.title() for name in researchers]  # Convert "David HSU" to "David Hsu"
         researcher_papers = load_papers_title(researchers)
 
     for researcher, papers in researcher_papers.items():
         papers_DIR = os.path.join("papers", researcher.replace(" ", "_"), "")
         utils.is_folder_exists_create_otherwise(papers_DIR)
 
-        for paper in papers:
-            try:
-                arxiv_crawler.download_from_arxiv(
-                    title=paper,
-                    my_api_key=my_api_key,
-                    my_cse_id=my_cse_id,
-                    dirname=papers_DIR)
-                papers.remove(paper)
-            except googleapiclient.errors.HttpError as e:
-                pickle.dump( researcher_papers, open( researcher_papers_location, "wb" ) )
-                utils.write_to_file("researchers1.txt", "\n".join(researcher_papers.keys()))
-                logging.error(str(e))
-        
+        try:
+            arxiv_crawler.download_list_of_papers_serial(
+                titles=papers,
+                dirname=papers_DIR,
+                my_api_key=my_api_key,
+                my_cse_id=my_cse_id)
+        except Exception as e:
+            pickle.dump( researcher_papers, open( researcher_papers_location, "wb" ) )
+            utils.write_to_file("researchers1.txt", "\n".join(researcher_papers.keys()))
+            logging.error(str(e))
+            break
+
         if len(papers) == 0:
             del researcher_papers[researcher]
 

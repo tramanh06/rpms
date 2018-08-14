@@ -69,9 +69,12 @@ def download_list_of_papers_parallel(titles, my_api_key, my_cse_id, dirname='./'
     filenames = [pool.apply(download_from_arxiv, args=(title, my_api_key, my_cse_id, dirname)) for title in titles]
 
 
+# TODO: return list of titles
 def download_list_of_papers_serial(titles, my_api_key, my_cse_id, dirname='./'):
     for paper in titles:
         download_from_arxiv(paper, my_api_key, my_cse_id, dirname)
+        titles.remove(paper)
+    # return titles
 
 
 def main():

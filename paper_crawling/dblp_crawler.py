@@ -25,12 +25,12 @@ def query_dblp_by_author(author):
 def query_dblp_for_author_freetext_name(author_name):
     authors = dblp.search(author_name)
     logging.info('Found %s authors for %s:', str(len(authors)), author_name)
-    logging.info(get_list_of_authors(authors))
+    # logging.info(get_list_of_authors(authors))
 
     if len(authors) > 2:
-        logging.warn("Too many authors found for %s. Complete list found by dblp: %s",
-                     author_name,
-                     get_list_of_authors(authors))
+        # logging.warn("Too many authors found for %s. Complete list found by dblp: %s",
+        #              author_name,
+        #              get_list_of_authors(authors))
         logging.warn("Going to pick the exact name: %s", author_name)
         return [author_name]
 
@@ -70,14 +70,15 @@ def dblp_crawler(author_name):
         response = query_dblp_by_author(str(author))
         if response.ok:
             parsed_json = response.json()
-            pubs = [pub['info'] for pub in parsed_json['result']['hits']['hit']]
-            if len(pubs) > 2:   # Filter out author's version that has 1 or 2 publications
-                result[str(author)] = pubs
+            if 'hit' in parsed_json['result']['hits']:
+                pubs = [pub['info'] for pub in parsed_json['result']['hits']['hit']]
+                if len(pubs) > 2:   # Filter out author's version that has 1 or 2 publications
+                    result[str(author)] = pubs
     return result
 
 if __name__ == "__main__":
-    # author_name = 'Bryan Low'
-    author_name = 'Bo-An'
+    author_name = 'Luis Fernando'
+    # author_name = 'Bo-An'
     crawler_result = dblp_crawler(author_name)
     print_publication_list(crawler_result)
 
