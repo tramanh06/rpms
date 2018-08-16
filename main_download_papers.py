@@ -76,20 +76,18 @@ def auto_download():
                 dirname=papers_DIR,
                 my_api_key=my_api_key,
                 my_cse_id=my_cse_id)
+            del researcher_papers[researcher]
         except Exception as e:
             pickle.dump( researcher_papers, open( researcher_papers_location, "wb" ) )
             utils.write_to_file("researchers1.txt", "\n".join(researcher_papers.keys()))
             logging.error(str(e))
             break
 
-        if len(papers) == 0:
-            del researcher_papers[researcher]
-
 
 
 def main():
     # researchers = ["Leong Tze Yun", "Bryan Low", "Harold Soh", "David Hsu", "Kuldeep S. Meel", "Lee Wee Sun"]
-    # researchers = ["Thomas Yeo"]
+    # researchers = ["Shang-Wei LIN", "Adams Wai-Kin KONG", "Wee Keong NG", "Anupam CHATTOPADHYAY"]
     # researchers = utils.read_file(file_location="researchers.txt", sep="|").split("|")
     # researchers = [name.title() for name in researchers]  # Convert "David HSU" to "David Hsu"
 
