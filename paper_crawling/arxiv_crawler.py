@@ -3,13 +3,15 @@ import arxiv
 from urllib import urlencode
 import logging
 import multiprocessing as mp
-import os
 import google_custom_search
 import configparser
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import utils
 
 # Reference for arxiv python is at https://github.com/lukasschwab/arxiv.py
 # Download any paper on arxiv from the title 
-# Paper downloaded is stored inside this code's folder
+# Paper downloaded is stored at /papers/<Author_name>
 
 
 def get_filename(dirname, title):
@@ -71,8 +73,16 @@ def download_list_of_papers_parallel(titles, my_api_key, my_cse_id, dirname='./'
 
 # TODO: return list of titles
 def download_list_of_papers_serial(titles, my_api_key, my_cse_id, dirname='./'):
-    for paper in titles:
-        download_from_arxiv(paper, my_api_key, my_cse_id, dirname)
+    try:
+        paper_index = 0
+        for paper in titles:
+            download_from_arxiv(paper, my_api_key, my_cse_id, dirname)
+            paper_index += 1
+    except Exception:
+        utils.write_to_file("index_marker.txt", str(paper_index))
+        raise
+        
+
             
     # return titles
 

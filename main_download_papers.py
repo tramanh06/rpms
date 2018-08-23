@@ -78,6 +78,8 @@ def auto_download():
                 my_cse_id=my_cse_id)
             del researcher_papers[researcher]
         except Exception as e:
+            completed_up_to = int(utils.read_file("index_marker.txt"))
+            researcher_papers[researcher] = researcher_papers[researcher][completed_up_to:]
             pickle.dump( researcher_papers, open( researcher_papers_location, "wb" ) )
             utils.write_to_file("researchers1.txt", "\n".join(researcher_papers.keys()))
             logging.error(str(e))
