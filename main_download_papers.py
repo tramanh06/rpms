@@ -7,6 +7,7 @@ import os
 import collections
 import pickle
 import googleapiclient
+import argparse
 
 fileConfig('logging_config.ini')
 logger = logging.getLogger()
@@ -56,13 +57,13 @@ def load_papers_title(researchers):
     return researcher_papers
 
 
-def auto_download():
-    researcher_papers_location = "researchers_to_papers.p"
+def auto_download(researcher_papers_location=None, researchers_file_location=None):
+    # researcher_papers_location = "researchers_to_papers.p"
 
     if os.path.isfile(researcher_papers_location):
         researcher_papers = pickle.load( open( researcher_papers_location, 'rb'))
     else:
-        researchers = utils.read_file(file_location="researchers.txt", sep="|").split("|")
+        researchers = utils.read_file(file_location=researchers_file_location, sep="|").split("|")
         researchers = [name.title() for name in researchers]  # Convert "David HSU" to "David Hsu"
         researcher_papers = load_papers_title(researchers)
 
@@ -98,4 +99,13 @@ def main():
     auto_download()
 
 if __name__ == '__main__':
-    main()
+
+    parser = argparse.ArgumentParser(description='Downloading papers')
+
+    parser.add_argument('-p', '--pickled', help='Location of pickled file that includes researchers name and their papers', required=False)
+    parser.add_argument('-r', '--researchers', help='Location of list of researchers', required=False)
+    args = vars(parser.parse_args())
+
+    '''researcher_papers_location="researchers_to_papers.p"'''
+    '''researchers_file_location="researchers.txt"'''
+    auto_download(args['pickled'], args['researchers'])
