@@ -1,3 +1,7 @@
+# THIS FILE IS DEPRECATED AND WAS ONLY USED FOR EXPERIMENT. 
+# It is not the main Topic Modelling file to be used.
+# Please see notebooks/Author-Topic_Model_2.ipynb for the working code
+
 import json
 import gensim
 import utils
@@ -48,7 +52,7 @@ class TopicModel():
 
 
 def main():
-    topicModel = TopicModel(source_file="papers.json", prune_dictionary=True, num_topics=50)
+    topicModel = TopicModel(source_file="papers.json", prune_dictionary=True, num_topics=5)
     topicModel.inference_topic(file_location="data.json")
 
 

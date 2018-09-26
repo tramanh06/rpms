@@ -5,13 +5,20 @@ from paper_matching import similarity
 import logging
 import pickle
 import configparser
+import argparse
 
 def main():
+    parser = argparse.ArgumentParser(description='Downloading papers')
+
+    parser.add_argument('-d', '--document', help='Location of pdf test document to be matched', required=True)
+    args = vars(parser.parse_args())
+
     config = configparser.ConfigParser()
     config.read('config.ini')
 
     # test_document_path = "/Users/nus/Dropbox/NUS/Papers/Gaussian Process Regression Networks.pdf"
-    test_document_path = "/Users/nus/Dropbox/NUS/Papers/Scalable and accurate deep learning with electronic healthrecords.pdf"
+    # test_document_path = "/Users/nus/Dropbox/NUS/Papers/Scalable and accurate deep learning with electronic healthrecords.pdf"
+    test_document_path = args['document']
 
     TOKENS_PHRASE = config['MATCHING_ALGO'].getboolean('USE_PHRASES')  # Toggle whether to detect phrase at tokenization step
     logging.info("TOKENS_PHRASE = %s", TOKENS_PHRASE)
@@ -56,3 +63,6 @@ if __name__ == '__main__':
     logging.getLogger("gensim").setLevel(logging.ERROR)
 
     main()
+
+    # To run
+    '''python main_match_paper.py -d "/Users/nus/Dropbox/NUS/Papers/Scalable and accurate deep learning with electronic healthrecords.pdf"'''

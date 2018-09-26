@@ -1,13 +1,9 @@
-* dblp_crawler.py: Look up dblp records given author's name
-
 * arxiv_crawler.py: download paper from arxiv given paper's title
 
-
-
-* paper_collection_direct_upload.php: script provides interface and
-  crawling mechanism. 
+* dblp_crawler.py: Look up dblp records given author's name
 
 * download_google_scholar_profile.py: script to download and store google
  scholar profiles
 
-* web_download_google_scholar_profile.py: web interface to download_google_scholar_profile.py
+* google_custom_search.py: utility functions to search using Google API
+

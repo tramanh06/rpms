@@ -1,10 +1,12 @@
 '''
 Author: TramAnh Nguyen 
 File Created: Monday, 25th June 2018 9:22:16 am
------
-Last Modified: Monday, 25th June 2018 10:07:50 am
-Modified By: TramAnh Nguyen 
------
+
+Read pdf from /papers and parse into .txt files under /bow folder
+
+For each pdf file, 2 things will be produced:
+- raw txt file verbatim from pdf2txt function
+- a .bow file that stores words after stemming and preprocessing
 '''
 import glob
 import json
@@ -44,7 +46,7 @@ if __name__ == '__main__':
 
     for author in os.listdir(papers_DIR):
         papers_sub_dir = os.path.join(papers_DIR, author, "")
-        if os.path.isdir(papers_sub_dir):
+        if os.path.isdir(papers_sub_dir) and os.listdir(papers_sub_dir):
             bow_sub_DIR = os.path.join(bow_DIR, author, "")
             all_texts = prepare_bow_content(papers_sub_dir, bow_sub_DIR)
 

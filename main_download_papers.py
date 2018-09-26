@@ -90,9 +90,8 @@ def auto_download(researcher_papers_location=None, researchers_file_location=Non
 
 def main():
     # researchers = ["Leong Tze Yun", "Bryan Low", "Harold Soh", "David Hsu", "Kuldeep S. Meel", "Lee Wee Sun"]
-    # researchers = ["Shang-Wei LIN", "Adams Wai-Kin KONG", "Wee Keong NG", "Anupam CHATTOPADHYAY"]
+
     # researchers = utils.read_file(file_location="researchers.txt", sep="|").split("|")
-    # researchers = [name.title() for name in researchers]  # Convert "David HSU" to "David Hsu"
 
     # for researcher in researchers:
     #     download_papers(researcher)
@@ -109,3 +108,6 @@ if __name__ == '__main__':
     '''researcher_papers_location="researchers_to_papers.p"'''
     '''researchers_file_location="researchers.txt"'''
     auto_download(args['pickled'], args['researchers'])
+
+    # To run 
+    '''python main_download_papers.py --pickled researchers_to_papers.p'''
