@@ -1,7 +1,7 @@
 RPMS - Reviewer-Paper Matching System
 -------------------------------------
 
-A text-based system to match paper with relevant reviewers.
+A text-based system to match paper with relevant reviewers, loosely based on Toronto Paper Matching System.
 
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine 
@@ -32,10 +32,8 @@ python -m spacy download en
 Download papers collection and dataset from AISG's team drive and extract
 under the project root folder.
 
-`AI Technology/TramAnh Handover`
-
-https://drive.google.com/open?id=10Qo7JuXZ4mv6YPKtDBSBuklUHKp9c1O8
-
+Drive location: `AI Technology/TramAnh Handover`
+Drive URL: https://drive.google.com/open?id=10Qo7JuXZ4mv6YPKtDBSBuklUHKp9c1O8
 
 
 
