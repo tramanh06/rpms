@@ -33,6 +33,7 @@ Download papers collection and dataset from AISG's team drive and extract
 under the project root folder.
 
 Drive location: `AI Technology/TramAnh Handover`
+
 Drive URL: https://drive.google.com/open?id=10Qo7JuXZ4mv6YPKtDBSBuklUHKp9c1O8
 
 
@@ -55,6 +56,12 @@ with timestamp, file details and log warning level, so that it's easy to monitor
 
 ## To run 
 ### Download Papers
+
+TODO:
+
+- [ ] Get a Google API Key by following instructions from [here](https://developers.google.com/custom-search/json-api/v1/overview)
+- [ ] Copy the keys.ini into `venv/`
+
 To download papers from a list of researchers
 
 ```
@@ -64,13 +71,16 @@ python main_download_papers.py --researchers researchers.txt
 The process will crawl dblp for list of papers and store the (researcher, papers) information 
 in a pickled file, `researchers_to_papers.p`. 
 
+*Note:*
+
 `main_download_papers.py` will first crawl from arxiv, if not found, it'll query 
 Google using Google Search API. Currently, Google API is used under Tram Anh's credentials
 and stored under `venv/keys.ini` (**do not** check in this file into version control, especially Github).
 We can only query 100 queries/day under free version. Therefore, a pickled file is used to keep
 track of what's left to query for the next day. The counter reset at 3pm Singapore time every day.
 
-To download papers from pickled file
+
+To download papers from pickled file (for subsequent downloads, once a pickled file has been created)
 
 ```
 python main_download_papers.py --pickled researchers_to_papers.p
