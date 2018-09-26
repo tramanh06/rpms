@@ -1,7 +1,7 @@
 RPMS - Reviewer-Paper Matching System
 -------------------------------------
 
-A text-based system to match 
+A text-based system to match paper with relevant reviewers.
 
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine 
@@ -18,17 +18,21 @@ pip install -r requirements.txt
 ```
 
 Install unix package pdftotext - needed to convert pdf to txt file
-```brew cask install pdftotext```
+```
+brew cask install pdftotext
+```
 
 
 Install Spacy's English dictionary - needed for tokenization
-```python -m spacy download en```
+```
+python -m spacy download en
+```
 
 
 Download papers collection and dataset from AISG's team drive and extract
 under the project root folder.
 
-`AI Technology / TramAnh Handover`
+`AI Technology/TramAnh Handover`
 
 https://drive.google.com/open?id=10Qo7JuXZ4mv6YPKtDBSBuklUHKp9c1O8
 
@@ -45,6 +49,7 @@ These are the important folders and files that should help you get started
 | `main_build_corpus.py` | Process pdf papers and parse to text. Stemming and remove of stopwords and strange characters as well. |
 | `main_match_paper.py` | Build corpus and word vector. Cosine similarity is used to match paper | 
 | `notebooks/Author-Topic_Model_2.ipynb` | Topic modelling of researchers papers based on Author-Topic LDA Model |
+
 
 Everytime a .py file is run, a log file will also be created and stored under `logs/`
 with timestamp, file details and log warning level, so that it's easy to monitor. 
