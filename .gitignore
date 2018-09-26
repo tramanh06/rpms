@@ -17,7 +17,12 @@ __pycache__/
 notebooks/nipstxt
 *.atmodel*
 *.tgz
-
+######################################
+# Google API keys. 
+# DO NOT exclude this out of gitignore
+venv/keys.ini  
+*/keys.ini
+######################################
 
 # C extensions
 *.so
@@ -101,7 +106,10 @@ celerybeat-schedule
 .env
 .venv
 env/
-venv/
+######################################
+# DO NOT exclude this out of gitignore
+venv/ 
+######################################
 ENV/
 env.bak/
 venv.bak/
