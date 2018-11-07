@@ -74,8 +74,7 @@ in a pickled file, `researchers_to_papers.p`.
 *Note:*
 
 `main_download_papers.py` will first crawl from arxiv, if not found, it'll query 
-Google using Google Search API. Currently, Google API is used under Tram Anh's credentials
-and stored under `venv/keys.ini` (**do not** check in this file into version control, especially Github).
+Google using Google Search API. 
 We can only query 100 queries/day under free version. Therefore, a pickled file is used to keep
 track of what's left to query for the next day. The counter reset at 3pm Singapore time every day.
 
