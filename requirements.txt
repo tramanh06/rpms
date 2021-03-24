@@ -113,7 +113,7 @@ qtconsole==4.3.1
 regex==2017.4.5
 requests==2.19.1
 rope==0.10.7
-rsa==3.4.2
+rsa==4.1
 s3transfer==0.1.13
 scandir==1.7
 scholarly==0.2.3
