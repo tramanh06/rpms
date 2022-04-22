@@ -103,7 +103,7 @@ pyLDAvis==2.1.2
 pylint==1.9.2
 pyOpenSSL==18.0.0
 pyparsing==2.2.0
-PyPDF2==1.26.0
+PyPDF2==1.27.5
 pytest==3.7.0
 python-dateutil==2.7.3
 pytz==2018.5
